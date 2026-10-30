@@ -1,0 +1,192 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 560" width="100%" height="100%" fill="none">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1120" y2="560" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0E0D12"/>
+      <stop offset="50%" stop-color="#171421"/>
+      <stop offset="100%" stop-color="#0E0D12"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#EADDFF"/>
+      <stop offset="50%" stop-color="#D0BCFF"/>
+      <stop offset="100%" stop-color="#7F5AF0"/>
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#23202A"/>
+      <stop offset="100%" stop-color="#1B1920"/>
+    </linearGradient>
+    <radialGradient id="glowCenter" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#7F5AF0" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#7F5AF0" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="125%">
+      <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#000000" flood-opacity="0.55"/>
+    </filter>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="1120" height="560" rx="24" fill="url(#bgGrad)"/>
+  <circle cx="580" cy="280" r="340" fill="url(#glowCenter)"/>
+
+  <!-- ==================== MACOS DESKTOP WINDOW (LEFT) ==================== -->
+  <g filter="url(#shadow)">
+    <rect x="44" y="48" width="676" height="464" rx="18" fill="#18161E" stroke="#342F42" stroke-width="1.5"/>
+    <!-- Sidebar -->
+    <path d="M44 66C44 56.0589 52.0589 48 62 48H204V512H62C52.0589 512 44 503.941 44 494V66Z" fill="#1D1B24"/>
+    <line x1="204" y1="48" x2="204" y2="512" stroke="#2D2938" stroke-width="1"/>
+
+    <!-- Window Traffic Lights -->
+    <circle cx="68" cy="72" r="6" fill="#FF5F56"/>
+    <circle cx="88" cy="72" r="6" fill="#FFBD2E"/>
+    <circle cx="108" cy="72" r="6" fill="#27C93F"/>
+
+    <!-- Brand Header in Sidebar -->
+    <rect x="64" y="100" width="28" height="28" rx="8" fill="#4F378B"/>
+    <path d="M72 120V108L84 120V108" stroke="#EADDFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="102" y="118" fill="#F4EFFA" font-family="-apple-system, BlinkMacSystemFont, Inter, sans-serif" font-size="14" font-weight="700">Nexus Desktop</text>
+
+    <!-- Sidebar Navigation Items -->
+    <rect x="56" y="146" width="136" height="34" rx="10" fill="#352B4D"/>
+    <circle cx="74" cy="163" r="5" fill="#D0BCFF"/>
+    <text x="88" y="167" fill="#EADDFF" font-family="-apple-system, BlinkMacSystemFont, Inter, sans-serif" font-size="12" font-weight="600">Dashboard</text>
+
+    <circle cx="74" cy="203" r="4" fill="#79747E"/>
+    <text x="88" y="207" fill="#CAC4D0" font-family="-apple-system, BlinkMacSystemFont, Inter, sans-serif" font-size="12" font-weight="500">Camera Hub</text>
+
+    <circle cx="74" cy="239" r="4" fill="#79747E"/>
+    <text x="88" y="243" fill="#CAC4D0" font-family="-apple-system, BlinkMacSystemFont, Inter, sans-serif" font-size="12" font-weight="500">Screen Mirror</text>
+
+    <circle cx="74" cy="275" r="4" fill="#79747E"/>
+    <text x="88" y="279" fill="#CAC4D0" font-family="-apple-system, BlinkMacSystemFont, Inter, sans-serif" font-size="12" font-weight="500">File Transfer</text>
+
+    <circle cx="74" cy="311" r="4" fill="#79747E"/>
+    <text x="88" y="315" fill="#CAC4D0" font-family="-apple-system, BlinkMacSystemFont, Inter, sans-serif" font-size="12" font-weight="500">Clipboard Sync</text>
+
+    <!-- Connected Device Pill at Bottom of Sidebar -->
+    <rect x="56" y="446" width="136" height="50" rx="12" fill="#25222E" stroke="#363145" stroke-width="1"/>
+    <circle cx="74" cy="471" r="5" fill="#A6F4C5"/>
+    <text x="86" y="467" fill="#F4EFFA" font-family="-apple-system, BlinkMacSystemFont, Inter, sans-serif" font-size="11" font-weight="600">Pixel 9 Pro</text>
+    <text x="86" y="482" fill="#A6F4C5" font-family="-apple-system, BlinkMacSystemFont, Inter, sans-serif" font-size="10">LAN TLS • 18 ms</text>
+
+    <!-- Main Content Area (macOS) -->
+    <text x="228" y="84" fill="#F4EFFA" font-family="-apple-system, BlinkMacSystemFont, Inter, sans-serif" font-size="16" font-weight="700">Live Camera &amp; Device Hub</text>
+    <rect x="580" y="66" width="116" height="26" rx="13" fill="#1F382B" stroke="#2F5E46" stroke-width="1"/>
+    <circle cx="596" cy="79" r="4" fill="#A6F4C5"/>
+    <text x="608" y="83" fill="#A6F4C5" font-family="-apple-system, BlinkMacSystemFont, Inter, sans-serif" font-size="11" font-weight="600">WebRTC H.264</text>
+
+    <!-- Video Stream Preview Box -->
+    <rect x="228" y="104" width="468" height="248" rx="14" fill="url(#cardGrad)" stroke="#353042" stroke-width="1"/>
+    <!-- Grid pattern representation -->
+    <line x1="228" y1="186" x2="696" y2="186" stroke="#FFFFFF" stroke-opacity="0.04"/>
+    <line x1="228" y1="268" x2="696" y2="268" stroke="#FFFFFF" stroke-opacity="0.04"/>
+    <line x1="384" y1="104" x2="384" y2="352" stroke="#FFFFFF" stroke-opacity="0.04"/>
+    <line x1="540" y1="104" x2="540" y2="352" stroke="#FFFFFF" stroke-opacity="0.04"/>
+
+    <!-- Center Focus Reticle & Telemetry Overlay -->
+    <rect x="422" y="192" width="80" height="72" rx="10" stroke="#D0BCFF" stroke-opacity="0.6" stroke-width="1.5" stroke-dasharray="6 4"/>
+    <circle cx="462" cy="228" r="4" fill="#D0BCFF"/>
+
+    <!-- Overlay Badges inside Video Preview -->
+    <rect x="244" y="120" width="134" height="24" rx="8" fill="#141318" fill-opacity="0.8"/>
+    <circle cx="258" cy="132" r="4" fill="#FF5F56"/>
+    <text x="268" y="136" fill="#E6E1E5" font-family="monospace" font-size="11" font-weight="600">1080p • 60 FPS</text>
+
+    <rect x="556" y="120" width="124" height="24" rx="8" fill="#141318" fill-opacity="0.8"/>
+    <text x="568" y="136" fill="#D0BCFF" font-family="monospace" font-size="11" font-weight="600">ISO 400 • 1/100s</text>
+
+    <!-- Bottom Camera Manual Controls Bar inside Video Preview -->
+    <rect x="244" y="304" width="436" height="34" rx="10" fill="#141318" fill-opacity="0.85"/>
+    <text x="260" y="325" fill="#CAC4D0" font-family="-apple-system, BlinkMacSystemFont, Inter, sans-serif" font-size="11">CoreMediaIO Virtual Cam: <tspan fill="#A6F4C5" font-weight="600">Ativa</tspan></text>
+    <rect x="566" y="311" width="102" height="20" rx="6" fill="#4F378B"/>
+    <text x="582" y="325" fill="#EADDFF" font-family="-apple-system, BlinkMacSystemFont, Inter, sans-serif" font-size="10" font-weight="600">Controle Manual</text>
+
+    <!-- Bottom Cards in macOS Window: File Transfer & Clipboard -->
+    <rect x="228" y="368" width="226" height="124" rx="14" fill="#211F29" stroke="#322E3E" stroke-width="1"/>
+    <text x="246" y="394" fill="#EADDFF" font-family="-apple-system, BlinkMacSystemFont, Inter, sans-serif" font-size="12" font-weight="700">File Hub (TCP/TLS)</text>
+    <text x="246" y="416" fill="#CAC4D0" font-family="-apple-system, BlinkMacSystemFont, Inter, sans-serif" font-size="11">demo-recording-4k.mp4</text>
+    <rect x="246" y="430" width="190" height="8" rx="4" fill="#353140"/>
+    <rect x="246" y="430" width="156" height="8" rx="4" fill="url(#accentGrad)"/>
+    <text x="246" y="458" fill="#938F99" font-family="monospace" font-size="10">SHA-256 Verificado • 82%</text>
+    <text x="246" y="476" fill="#A6F4C5" font-family="monospace" font-size="10">48.5 MB/s (LAN Direta)</text>
+
+    <rect x="470" y="368" width="226" height="124" rx="14" fill="#211F29" stroke="#322E3E" stroke-width="1"/>
+    <text x="488" y="394" fill="#EADDFF" font-family="-apple-system, BlinkMacSystemFont, Inter, sans-serif" font-size="12" font-weight="700">Clipboard &amp; Input Hub</text>
+    <text x="488" y="416" fill="#CAC4D0" font-family="-apple-system, BlinkMacSystemFont, Inter, sans-serif" font-size="11">Sincronização Bidirecional</text>
+    <rect x="488" y="428" width="190" height="32" rx="8" fill="#18161E" stroke="#322E3E"/>
+    <text x="500" y="448" fill="#D0BCFF" font-family="monospace" font-size="10">./gradlew assembleDebug</text>
+    <text x="488" y="478" fill="#A6F4C5" font-family="-apple-system, BlinkMacSystemFont, Inter, sans-serif" font-size="10">● Mouse &amp; Teclado Mapeados</text>
+  </g>
+
+  <!-- ==================== CONNECTION BRIDGE (CENTER) ==================== -->
+  <g>
+    <path d="M720 260 C755 260, 765 260, 800 260" stroke="url(#accentGrad)" stroke-width="3" stroke-dasharray="6 6"/>
+    <path d="M720 300 C755 300, 765 300, 800 300" stroke="#A6F4C5" stroke-width="2" stroke-dasharray="4 6"/>
+    <rect x="726" y="232" width="68" height="22" rx="11" fill="#381E72" stroke="#D0BCFF" stroke-width="1"/>
+    <text x="742" y="247" fill="#EADDFF" font-family="monospace" font-size="10" font-weight="700">P2P TLS</text>
+  </g>
+
+  <!-- ==================== ANDROID PHONE (RIGHT) ==================== -->
+  <g filter="url(#shadow)">
+    <!-- Phone Frame -->
+    <rect x="800" y="36" width="272" height="488" rx="38" fill="#141318" stroke="#3B364A" stroke-width="3"/>
+    <!-- Inner Screen -->
+    <rect x="810" y="46" width="252" height="468" rx="30" fill="#141318"/>
+    <!-- Camera Punch Hole -->
+    <circle cx="936" cy="64" r="6" fill="#09080C"/>
+
+    <!-- Status Bar -->
+    <text x="830" y="68" fill="#E6E1E5" font-family="Roboto, sans-serif" font-size="10" font-weight="600">09:41</text>
+    <text x="1018" y="68" fill="#A6F4C5" font-family="Roboto, sans-serif" font-size="10" font-weight="700">5G • 98%</text>
+
+    <!-- App Top Bar -->
+    <text x="828" y="102" fill="#E6E1E5" font-family="Roboto, sans-serif" font-size="18" font-weight="700">Nexus</text>
+    <rect x="978" y="86" width="66" height="22" rx="11" fill="#1F382B"/>
+    <circle cx="990" cy="97" r="3.5" fill="#A6F4C5"/>
+    <text x="998" y="101" fill="#A6F4C5" font-family="Roboto, sans-serif" font-size="9" font-weight="600">Ativo</text>
+
+    <!-- Hero Connection Card (Material You) -->
+    <rect x="826" y="118" width="220" height="86" rx="22" fill="#4F378B"/>
+    <text x="844" y="142" fill="#EADDFF" font-family="Roboto, sans-serif" font-size="10" font-weight="600">CONECTADO AO MACOS</text>
+    <text x="844" y="162" fill="#FFFFFF" font-family="Roboto, sans-serif" font-size="15" font-weight="700">MacBook Pro de Vitor</text>
+    <text x="844" y="184" fill="#D0BCFF" font-family="Roboto, sans-serif" font-size="11">Wi-Fi 5 GHz • Sessão v1 Autenticada</text>
+
+    <!-- Quick Action Tiles (2x2 Grid) -->
+    <!-- Tile 1: Camera Active -->
+    <rect x="826" y="218" width="104" height="92" rx="20" fill="#362F4A" stroke="#D0BCFF" stroke-width="1.5"/>
+    <circle cx="852" cy="244" r="14" fill="#D0BCFF"/>
+    <circle cx="852" cy="244" r="5" fill="#381E72"/>
+    <text x="840" y="278" fill="#EADDFF" font-family="Roboto, sans-serif" font-size="12" font-weight="700">Câmera</text>
+    <text x="840" y="294" fill="#D0BCFF" font-family="Roboto, sans-serif" font-size="10">Transmitindo</text>
+
+    <!-- Tile 2: Screen Mirror -->
+    <rect x="942" y="218" width="104" height="92" rx="20" fill="#211F26" stroke="#322F38" stroke-width="1"/>
+    <circle cx="968" cy="244" r="14" fill="#35333C"/>
+    <rect x="962" y="239" width="12" height="10" rx="2" stroke="#E8DEF8" stroke-width="1.5"/>
+    <text x="956" y="278" fill="#E6E1E5" font-family="Roboto, sans-serif" font-size="12" font-weight="700">Tela</text>
+    <text x="956" y="294" fill="#938F99" font-family="Roboto, sans-serif" font-size="10">Pronto</text>
+
+    <!-- Tile 3: File Transfer -->
+    <rect x="826" y="322" width="104" height="92" rx="20" fill="#362F4A" stroke="#D0BCFF" stroke-width="1.5"/>
+    <circle cx="852" cy="348" r="14" fill="#D0BCFF"/>
+    <path d="M847 348H857M853 344L857 348L853 352" stroke="#381E72" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="840" y="382" fill="#EADDFF" font-family="Roboto, sans-serif" font-size="12" font-weight="700">Arquivos</text>
+    <text x="840" y="398" fill="#A6F4C5" font-family="Roboto, sans-serif" font-size="10">Enviando (82%)</text>
+
+    <!-- Tile 4: Clipboard -->
+    <rect x="942" y="322" width="104" height="92" rx="20" fill="#211F26" stroke="#322F38" stroke-width="1"/>
+    <circle cx="968" cy="348" r="14" fill="#35333C"/>
+    <rect x="963" y="342" width="10" height="12" rx="2" stroke="#E8DEF8" stroke-width="1.5"/>
+    <text x="956" y="382" fill="#E6E1E5" font-family="Roboto, sans-serif" font-size="12" font-weight="700">Clipboard</text>
+    <text x="956" y="398" fill="#A6F4C5" font-family="Roboto, sans-serif" font-size="10">Sincronizado</text>
+
+    <!-- Bottom Navigation Pill Bar -->
+    <rect x="826" y="432" width="220" height="54" rx="27" fill="#211F26"/>
+    <rect x="838" y="443" width="60" height="32" rx="16" fill="#4A4458"/>
+    <text x="853" y="463" fill="#E8DEF8" font-family="Roboto, sans-serif" font-size="10" font-weight="700">Início</text>
+    <text x="912" y="463" fill="#938F99" font-family="Roboto, sans-serif" font-size="10" font-weight="500">Arquivos</text>
+    <text x="976" y="463" fill="#938F99" font-family="Roboto, sans-serif" font-size="10" font-weight="500">Ajustes</text>
+
+    <!-- Gesture Pill -->
+    <rect x="900" y="498" width="72" height="4" rx="2" fill="#49454F"/>
+  </g>
+</svg>
+

@@ -6,7 +6,7 @@ Este documento descreve a organização do **Product Backlog inicial do Nexus**,
 
 ## 1. Visão Geral da Organização do Backlog
 
-O Product Backlog foi estruturado para orientar o desenvolvimento incremental do **Nexus** com foco na redução progressiva de riscos técnicos (conforme a estratégia definida no [`README.md`](../README.md) e em [`docs/recomendation.md`](./recomendation.md)):
+O Product Backlog foi estruturado para orientar o desenvolvimento incremental do **Nexus** com foco na redução progressiva de riscos técnicos (conforme a estratégia definida em [`docs/roadmap.md`](./roadmap.md) e em [`docs/recomendation.md`](./recomendation.md)):
 
 1. **Fase 1 — Fundação e MVP de Conectividade (`phase:1-foundation`)**: Estruturação do monorepositório, configuração inicial dos projetos Android e macOS, protocolo de controle versionado, descoberta mDNS, pareamento seguro com chaves de dispositivo, máquina de estados de conexão sobre TLS, transferência de arquivos com verificação SHA-256 e sincronização de clipboard textual.
 2. **Fase 2 — Streaming, Câmera e Controle Remoto (`phase:2-streaming`)**: Integração WebRTC com sinalização pelo canal de controle autenticado, streaming de câmera Android (`Camera2` + `MediaCodec` H.264) para janela nativa no macOS, espelhamento de tela via `MediaProjection`, controles manuais de câmera (`CameraProfile`), controle remoto autorizado via `AccessibilityService` e telemetria de latência.
