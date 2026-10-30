@@ -1,0 +1,114 @@
+# ==============================================================================
+# Nexus Monorepo — Global .gitignore
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. Android / Gradle / Kotlin
+# ------------------------------------------------------------------------------
+.gradle/
+**/build/
+!**/src/**/build/
+local.properties
+*.apk
+*.aab
+*.ap_
+*.aab_
+*.dex
+*.class
+bin/
+gen/
+out/
+captures/
+.externalNativeBuild/
+.cxx/
+.navigation/
+output.json
+*.hprof
+.kotlin/
+kotlin-js-store/
+
+# ------------------------------------------------------------------------------
+# 2. macOS / Xcode / Swift Package Manager
+# ------------------------------------------------------------------------------
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Xcode
+DerivedData/
+**/DerivedData/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+**/xcuserdata/
+*.xccheckout
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+timeline.xctimeline
+playground.xcworkspace
+
+# Swift Package Manager
+.build/
+**/.build/
+.swiftpm/
+**/.swiftpm/
+Package.resolved
+
+# ------------------------------------------------------------------------------
+# 3. IDEs & Editors (Android Studio, IntelliJ IDEA, VS Code, Vim)
+# ------------------------------------------------------------------------------
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+*.swp
+*.swo
+*~
+
+# ------------------------------------------------------------------------------
+# 4. Security, Signing Keys & Local Credentials
+# ------------------------------------------------------------------------------
+*.jks
+*.keystore
+*.p12
+*.pfx
+*.pem
+*.key
+*.cer
+*.crt
+*.der
+*.mobileprovision
+*.provisionprofile
+keystore.properties
+secrets.properties
+local.defaults.properties
+.env
+.env.*
+!.env.example
+
+# ------------------------------------------------------------------------------
+# 5. Logs, Coverage & Temporary Artifacts
+# ------------------------------------------------------------------------------
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+coverage/
+*.lcov
+tmp/
+temp/
+.cache/
+
