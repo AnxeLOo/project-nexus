@@ -1184,6 +1184,31 @@ Os testes que dependem de dispositivos físicos poderão ser executados em uma e
 
 Para o macOS, o pipeline deverá compilar o aplicativo, executar testes automatizados e validar o empacotamento da extensão de câmera. A ativação e os testes de distribuição precisarão considerar os requisitos de segurança do sistema.
 
+## 12.3. Configuração e execução local do projeto Android
+
+O projeto Android em [`android/`](android/README.md) está estruturado com Gradle Kotlin DSL, Version Catalog (`gradle/libs.versions.toml`), `minSdk = 29` (Android 10) e `targetSdk = 35` (Android 15).
+
+### Pré-requisitos
+- **JDK 17** ou **JDK 21** instalado.
+- **Android SDK** (`Platform 35` e `Build-Tools 35.0.0`) configurado via variável `ANDROID_HOME` ou `android/local.properties` (`sdk.dir=/caminho/para/Android/sdk`).
+
+### Comandos principais
+
+```bash
+cd android
+
+# Compilar variantes debug e release
+./gradlew assembleDebug assembleRelease
+
+# Executar testes unitários (domínio em JVM puro e ViewModels)
+./gradlew test
+
+# Instalar e executar a variante debug em um dispositivo/emulador conectado
+./gradlew installDebug
+```
+
+Consulte [`android/README.md`](android/README.md) para mais detalhes sobre os módulos Gradle e o sistema de design Material 3.
+
 ---
 
 # 13. Decisões arquiteturais recomendadas
