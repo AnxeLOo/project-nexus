@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus - Interface Android Material You</title>
+
+    <!-- Fonts & Material Symbols -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        m3: {
+                            bg: '#141318',
+                            surface: '#1D1B20',
+                            surfaceVariant: '#2A2830',
+                            surfaceHigh: '#35333C',
+                            primary: '#D0BCFF',
+                            onPrimary: '#381E72',
+                            primaryContainer: '#4F378B',
+                            onPrimaryContainer: '#EADDFF',
+                            secondaryContainer: '#4A4458',
+                            onSecondaryContainer: '#E8DEF8',
+                            tertiaryContainer: '#633B48',
+                            onTertiaryContainer: '#FFD8E4',
+                            activeTile: '#362F4A',
+                            activeTileIcon: '#E8DEF8',
+                            accentGreen: '#A6F4C5',
+                            onAccentGreen: '#00381B'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        '4xl': '2rem',
+                        '5xl': '2.5rem',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar & Material Animations */
+        ::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            user-select: none;
+        }
+
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* Interactive Tile Animations */
+        .m3-tile {
+            transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        .m3-tile:active {
+            transform: scale(0.97);
+        }
+
+        /* Dynamic Active State Visuals */
+        .m3-tile.active {
+            background-color: #362F4A !important;
+            border-color: #D0BCFF !important;
+        }
+
+        .m3-tile.active .tile-icon {
+            background-color: #D0BCFF !important;
+            color: #381E72 !important;
+        }
+
+        /* Toast Banner Animation */
+        #toast {
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-slate-950 text-slate-100 min-h-screen flex items-center justify-center p-0 sm:p-4 font-sans antialiased">
+
+    <!-- Mobile Frame Simulator -->
+    <div
+        class="w-full max-w-[412px] h-[100vh] sm:h-[870px] bg-m3-bg sm:rounded-[48px] shadow-2xl flex flex-col justify-between overflow-hidden relative border border-slate-800/80">
+
+        <!-- Android Status Bar -->
+        <div
+            class="w-full pt-3 px-6 pb-2 flex justify-between items-center text-xs font-medium text-slate-300 z-30 select-none">
+            <span id="current-time">09:41</span>
+            <div class="flex items-center space-x-2">
+                <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"
+                    title="Conexão Ativa"></span>
+                <span class="material-symbols-outlined text-[16px]">wifi</span>
+                <span class="material-symbols-outlined text-[16px]">signal_cellular_alt</span>
+                <div class="flex items-center gap-0.5 border border-slate-400/50 rounded-sm px-1 py-0.5">
+                    <span class="text-[10px]">85%</span>
+                    <span class="material-symbols-outlined text-[12px]">battery_full</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scrollable Main Screen Content -->
+        <main class="flex-1 overflow-y-auto px-5 pt-2 pb-28 space-y-5">
+
+            <!-- Top Header & Profile Section -->
+            <header class="flex justify-between items-center pt-2">
+                <div class="flex items-center space-x-3">
+                    <div
+                        class="w-11 h-11 rounded-full bg-gradient-to-tr from-purple-400 to-indigo-300 p-[2px] shadow-md">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80"
+                            alt="Usuário" class="w-full h-full rounded-full object-cover"
+                            onerror="this.src='https://placehold.co/100x100/4F378B/EADDFF?text=Alex'" />
+                    </div>
+                    <div>
+                        <span class="text-xs font-medium text-purple-300 tracking-wider uppercase block">Nexus
+                            Extension</span>
+                        <h1 class="text-xl font-bold text-slate-100">Olá, Alex</h1>
+                    </div>
+                </div>
+
+                <button
+                    class="w-10 h-10 rounded-full bg-m3-surfaceVariant flex items-center justify-center hover:bg-m3-surfaceHigh transition"
+                    active:scale-95>
+                    <span class="material-symbols-outlined text-slate-200">settings</span>
+                </button>
+            </header>
+
+            <!-- Connection Status Card (Google Home Style) -->
+            <section
+                class="bg-m3-surface rounded-4xl p-4 border border-slate-800 flex items-center justify-between shadow-sm">
+                <div class="flex items-center space-x-3.5">
+                    <div
+                        class="w-12 h-12 rounded-2xl bg-m3-primaryContainer flex items-center justify-center text-m3-onPrimaryContainer">
+                        <span class="material-symbols-outlined text-2xl">laptop_mac</span>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-2">
+                            <h2 class="text-sm font-semibold text-slate-100">MacBook Pro M3</h2>
+                            <span
+                                class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">ONLINE</span>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-0.5 flex items-center gap-1.5">
+                            <span>Bateria 85%</span> • <span>Wi-Fi 5G</span>
+                        </p>
+                    </div>
+                </div>
+                <button onclick="showToast('Sincronizando com o Mac...')"
+                    class="w-9 h-9 rounded-full bg-m3-surfaceVariant flex items-center justify-center text-purple-300 hover:bg-m3-surfaceHigh">
+                    <span class="material-symbols-outlined text-lg">sync</span>
+                </button>
+            </section>
+
+            <!-- Quick Actions Grid (Google Home Tiles) -->
+            <section>
+                <div class="flex justify-between items-center mb-3 px-1">
+                    <h3 class="text-xs font-bold tracking-wider text-slate-400 uppercase">Recursos e Controles</h3>
+                    <span class="text-xs text-purple-300 font-medium">4 ativos</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3.5">
+
+                    <!-- Continuity Camera Tile -->
+                    <div id="tile-camera" onclick="toggleTile('tile-camera', 'camera-status')"
+                        class="m3-tile active bg-m3-surface border border-slate-800 rounded-3xl p-4 flex flex-col justify-between h-36 cursor-pointer hover:border-purple-500/40">
+                        <div class="flex justify-between items-start">
+                            <div
+                                class="tile-icon w-10 h-10 rounded-2xl bg-m3-surfaceVariant text-purple-300 flex items-center justify-center">
+                                <span class="material-symbols-outlined">videocam</span>
+                            </div>
+                            <div
+                                class="w-8 h-5 rounded-full bg-m3-primary p-0.5 flex items-center justify-end transition-all switch-bg">
+                                <div class="w-4 h-4 rounded-full bg-m3-onPrimary switch-dot"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-semibold text-slate-100">Câmera Continuity</h4>
+                            <p id="camera-status" class="text-xs text-purple-200 mt-0.5 font-medium">Webcam 4K Ativa</p>
+                        </div>
+                    </div>
+
+                    <!-- Screen Mirroring Tile -->
+                    <div id="tile-mirror" onclick="toggleTile('tile-mirror', 'mirror-status')"
+                        class="m3-tile bg-m3-surface border border-slate-800 rounded-3xl p-4 flex flex-col justify-between h-36 cursor-pointer hover:border-purple-500/40">
+                        <div class="flex justify-between items-start">
+                            <div
+                                class="tile-icon w-10 h-10 rounded-2xl bg-m3-surfaceVariant text-purple-300 flex items-center justify-center">
+                                <span class="material-symbols-outlined">cast</span>
+                            </div>
+                            <div
+                                class="w-8 h-5 rounded-full bg-slate-700 p-0.5 flex items-center justify-start transition-all switch-bg">
+                                <div class="w-4 h-4 rounded-full bg-slate-400 switch-dot"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-semibold text-slate-100">Espelhamento</h4>
+                            <p id="mirror-status" class="text-xs text-slate-400 mt-0.5">Toque p/ Estender</p>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Universal Clipboard Section -->
+            <section class="bg-m3-surface border border-slate-800 rounded-4xl p-4 space-y-3">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <span class="material-symbols-outlined text-purple-300">content_paste</span>
+                        <h3 class="text-sm font-semibold text-slate-100">Área de Transferência</h3>
+                    </div>
+                    <span class="text-[10px] text-slate-400 font-mono">Há 2 min</span>
+                </div>
+
+                <div
+                    class="bg-m3-surfaceVariant/60 rounded-2xl p-3 border border-slate-700/50 flex items-center justify-between">
+                    <p id="clipboard-text" class="text-xs text-slate-300 font-mono truncate mr-2">
+                        https://github.com/apple/swift-evolution</p>
+                    <button onclick="copyClipboard()"
+                        class="px-3 py-1.5 rounded-xl bg-m3-primary text-m3-onPrimary text-xs font-semibold flex items-center space-x-1 shrink-0 hover:opacity-90 active:scale-95 transition">
+                        <span class="material-symbols-outlined text-sm">content_copy</span>
+                        <span>Copiar</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Media Controller (macOS Player) -->
+            <section class="bg-m3-surface border border-slate-800 rounded-4xl p-4 space-y-3">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                        <span class="material-symbols-outlined text-pink-300">music_note</span>
+                        <span class="text-xs font-medium text-slate-400">Em reprodução no Mac</span>
+                    </div>
+                    <span class="text-xs text-slate-400 font-semibold">Spotify</span>
+                </div>
+
+                <div class="flex items-center space-x-3.5">
+                    <img src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?auto=format&fit=crop&w=200&q=80"
+                        alt="Capa do Álbum" class="w-14 h-14 rounded-2xl object-cover shadow-md shrink-0"
+                        onerror="this.src='https://placehold.co/120x120/381E72/EADDFF?text=Music'" />
+                    <div class="flex-1 min-w-0">
+                        <h4 class="text-sm font-bold text-slate-100 truncate">Starboy</h4>
+                        <p class="text-xs text-slate-400 truncate mt-0.5">The Weeknd, Daft Punk</p>
+                        <!-- Progress Bar -->
+                        <div class="w-full bg-slate-700 h-1.5 rounded-full mt-2.5 overflow-hidden">
+                            <div class="bg-purple-300 h-full w-2/3 rounded-full"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="flex items-center justify-between pt-1 px-2">
+                    <button class="text-slate-400 hover:text-slate-100 active:scale-90 transition">
+                        <span class="material-symbols-outlined text-2xl">shuffle</span>
+                    </button>
+                    <button class="text-slate-200 hover:text-slate-100 active:scale-90 transition">
+                        <span class="material-symbols-outlined text-2xl">skip_previous</span>
+                    </button>
+                    <button id="play-btn" onclick="togglePlay()"
+                        class="w-11 h-11 rounded-full bg-m3-primary text-m3-onPrimary flex items-center justify-center shadow-lg active:scale-90 transition">
+                        <span id="play-icon" class="material-symbols-outlined text-2xl filled">pause</span>
+                    </button>
+                    <button class="text-slate-200 hover:text-slate-100 active:scale-90 transition">
+                        <span class="material-symbols-outlined text-2xl">skip_next</span>
+                    </button>
+                    <button class="text-slate-400 hover:text-slate-100 active:scale-90 transition">
+                        <span class="material-symbols-outlined text-2xl">repeat</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Shared Files Section -->
+            <section class="space-y-3">
+                <div class="flex justify-between items-center px-1">
+                    <h3 class="text-xs font-bold tracking-wider text-slate-400 uppercase">Transferências Recentes</h3>
+                    <button onclick="simulateFileUpload()"
+                        class="text-xs text-m3-primary font-medium hover:underline flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm">upload_file</span>
+                        <span>Enviar para o Mac</span>
+                    </button>
+                </div>
+
+                <!-- File Upload Dynamic Progress Simulator -->
+                <div id="upload-progress-card"
+                    class="hidden bg-m3-surfaceVariant border border-purple-500/30 rounded-2xl p-3 space-y-2">
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="text-purple-200 font-medium truncate">Enviando "Vídeo_Apresentação.mp4"...</span>
+                        <span id="upload-percentage" class="text-purple-300 font-mono font-bold">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                        <div id="upload-bar"
+                            class="bg-gradient-to-r from-purple-400 to-indigo-300 h-full w-0 transition-all duration-200 rounded-full">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <!-- File item 1 -->
+                    <div
+                        class="bg-m3-surface border border-slate-800/80 rounded-2xl p-3 flex items-center justify-between hover:bg-m3-surfaceVariant/50 transition">
+                        <div class="flex items-center space-x-3">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-red-500/10 text-red-400 flex items-center justify-center">
+                                <span class="material-symbols-outlined">picture_as_pdf</span>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-semibold text-slate-200">Apresentacao_Projeto.pdf</h4>
+                                <p class="text-[10px] text-slate-400 mt-0.5">4.2 MB • Recebido do Mac</p>
+                            </div>
+                        </div>
+                        <button onclick="showToast('Arquivo aberto no Android')"
+                            class="p-2 text-slate-400 hover:text-slate-100">
+                            <span class="material-symbols-outlined text-lg">download</span>
+                        </button>
+                    </div>
+
+                    <!-- File item 2 -->
+                    <div
+                        class="bg-m3-surface border border-slate-800/80 rounded-2xl p-3 flex items-center justify-between hover:bg-m3-surfaceVariant/50 transition">
+                        <div class="flex items-center space-x-3">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center">
+                                <span class="material-symbols-outlined">image</span>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-semibold text-slate-200">Captura_de_Tela_Mac.png</h4>
+                                <p class="text-[10px] text-slate-400 mt-0.5">1.8 MB • Enviado para o Mac</p>
+                            </div>
+                        </div>
+                        <button onclick="showToast('Imagem copiada')" class="p-2 text-slate-400 hover:text-slate-100">
+                            <span class="material-symbols-outlined text-lg">share</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Floating Toast Notification -->
+        <div id="toast"
+            class="absolute bottom-20 left-1/2 -translate-x-1/2 bg-slate-100 text-slate-900 px-4 py-2.5 rounded-full text-xs font-semibold shadow-2xl flex items-center space-x-2 z-50 pointer-events-none opacity-0 translate-y-4">
+            <span class="material-symbols-outlined text-sm text-purple-700">check_circle</span>
+            <span id="toast-message">Mensagem de teste</span>
+        </div>
+
+        <!-- Floating Bottom Navigation Bar (Material You) -->
+        <nav
+            class="absolute bottom-3 left-4 right-4 bg-m3-surface/95 backdrop-blur-md border border-slate-800/80 rounded-full py-2 px-3 flex justify-around items-center shadow-2xl z-40">
+
+            <!-- Nav Item 1 -->
+            <button onclick="switchTab(this)" class="nav-item flex flex-col items-center space-y-0.5 text-m3-primary">
+                <div
+                    class="px-5 py-1 rounded-full bg-m3-secondaryContainer text-m3-onSecondaryContainer flex items-center justify-center transition-all">
+                    <span class="material-symbols-outlined text-xl filled">dashboard</span>
+                </div>
+                <span class="text-[10px] font-medium">Início</span>
+            </button>
+
+            <!-- Nav Item 2 -->
+            <button onclick="switchTab(this)"
+                class="nav-item flex flex-col items-center space-y-0.5 text-slate-400 hover:text-slate-200">
+                <div class="px-5 py-1 rounded-full flex items-center justify-center transition-all">
+                    <span class="material-symbols-outlined text-xl">devices</span>
+                </div>
+                <span class="text-[10px] font-medium">Dispositivos</span>
+            </button>
+
+            <!-- Nav Item 3 -->
+            <button onclick="switchTab(this)"
+                class="nav-item flex flex-col items-center space-y-0.5 text-slate-400 hover:text-slate-200">
+                <div class="px-5 py-1 rounded-full flex items-center justify-center transition-all">
+                    <span class="material-symbols-outlined text-xl">swap_horiz</span>
+                </div>
+                <span class="text-[10px] font-medium">Transferências</span>
+            </button>
+
+            <!-- Nav Item 4 -->
+            <button onclick="switchTab(this)"
+                class="nav-item flex flex-col items-center space-y-0.5 text-slate-400 hover:text-slate-200">
+                <div class="px-5 py-1 rounded-full flex items-center justify-center transition-all">
+                    <span class="material-symbols-outlined text-xl">tune</span>
+                </div>
+                <span class="text-[10px] font-medium">Ajustes</span>
+            </button>
+
+        </nav>
+
+        <!-- Android Gesture Navigation Bar -->
+        <div class="w-full pb-2 flex justify-center items-center z-40 pointer-events-none">
+            <div class="w-32 h-1 bg-slate-500/50 rounded-full"></div>
+        </div>
+
+    </div>
+
+    <!-- Interactive JavaScript -->
+    <script>
+        // Live Clock Simulator
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('current-time').textContent = `${hours}:${minutes}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Show Toast Notification
+        let toastTimeout;
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+
+            toastMsg.textContent = message;
+            toast.classList.remove('opacity-0', 'translate-y-4');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', 'translate-y-4');
+            }, 2500);
+        }
+
+        // Toggle Tiles Active State (Google Home Style)
+        function toggleTile(tileId, statusId) {
+            const tile = document.getElementById(tileId);
+            const status = document.getElementById(statusId);
+            const switchBg = tile.querySelector('.switch-bg');
+            const switchDot = tile.querySelector('.switch-dot');
+
+            const isActive = tile.classList.toggle('active');
+
+            if (isActive) {
+                switchBg.classList.replace('bg-slate-700', 'bg-m3-primary');
+                switchBg.classList.replace('justify-start', 'justify-end');
+                switchDot.classList.replace('bg-slate-400', 'bg-m3-onPrimary');
+
+                if (tileId === 'tile-camera') status.textContent = "Webcam 4K Ativa";
+                if (tileId === 'tile-mirror') status.textContent = "Espelhamento Ativo";
+
+                showToast('Recurso ativado no Mac');
+            } else {
+                switchBg.classList.replace('bg-m3-primary', 'bg-slate-700');
+                switchBg.classList.replace('justify-end', 'justify-start');
+                switchDot.classList.replace('bg-m3-onPrimary', 'bg-slate-400');
+
+                if (tileId === 'tile-camera') status.textContent = "Desativado";
+                if (tileId === 'tile-mirror') status.textContent = "Toque p/ Estender";
+
+                showToast('Recurso desativado');
+            }
+        }
+
+        // Universal Clipboard Copy Simulation
+        function copyClipboard() {
+            const text = document.getElementById('clipboard-text').textContent;
+            // Fallback copy for iframe environment
+            const tempInput = document.createElement('input');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            showToast('Copiado para a área de transferência do Mac!');
+        }
+
+        // Media Player Play/Pause Toggle
+        let isPlaying = true;
+        function togglePlay() {
+            const icon = document.getElementById('play-icon');
+            isPlaying = !isPlaying;
+
+            if (isPlaying) {
+                icon.textContent = 'pause';
+                showToast('Reprodução iniciada no Mac');
+            } else {
+                icon.textContent = 'play_arrow';
+                showToast('Reprodução pausada');
+            }
+        }
+
+        // Bottom Navigation Bar Switcher
+        function switchTab(clickedBtn) {
+            document.querySelectorAll('.nav-item').forEach(btn => {
+                btn.classList.remove('text-m3-primary');
+                btn.classList.add('text-slate-400');
+                const iconDiv = btn.querySelector('div');
+                iconDiv.classList.remove('bg-m3-secondaryContainer', 'text-m3-onSecondaryContainer');
+                const iconSpan = btn.querySelector('.material-symbols-outlined');
+                iconSpan.classList.remove('filled');
+            });
+
+            clickedBtn.classList.remove('text-slate-400');
+            clickedBtn.classList.add('text-m3-primary');
+            const activeDiv = clickedBtn.querySelector('div');
+            activeDiv.classList.add('bg-m3-secondaryContainer', 'text-m3-onSecondaryContainer');
+            const activeSpan = clickedBtn.querySelector('.material-symbols-outlined');
+            activeSpan.classList.add('filled');
+        }
+
+        // File Upload Progress Simulator
+        function simulateFileUpload() {
+            const card = document.getElementById('upload-progress-card');
+            const bar = document.getElementById('upload-bar');
+            const percentage = document.getElementById('upload-percentage');
+
+            card.classList.remove('hidden');
+            bar.style.width = '0%';
+            percentage.textContent = '0%';
+
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 15) + 5;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        card.classList.add('hidden');
+                        showToast('Arquivo enviado para o Mac com sucesso!');
+                    }, 600);
+                }
+                bar.style.width = `${progress}%`;
+                percentage.textContent = `${progress}%`;
+            }, 150);
+        }
+    </script>
+</body>
+
+</html>

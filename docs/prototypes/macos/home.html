@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Desktop - macOS Companion</title>
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        mac: {
+                            bg: 'rgba(20, 19, 24, 0.92)',
+                            sidebar: 'rgba(29, 27, 32, 0.85)',
+                            card: '#1D1B20',
+                            cardHover: '#28252C',
+                            surfaceVariant: '#2A2830',
+                            border: 'rgba(255, 255, 255, 0.08)',
+                            accent: '#D0BCFF',
+                            accentHover: '#EADDFF',
+                            accentDark: '#381E72',
+                            primaryContainer: '#4F378B',
+                            secondaryContainer: '#4A4458',
+                            activeTab: 'rgba(208, 188, 255, 0.12)',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        '2xl': '1.25rem',
+                        '3xl': '1.75rem',
+                        '4xl': '2rem',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 999px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            user-select: none;
+        }
+
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* Glassmorphism & macOS Window Blur */
+        .mac-window-glass {
+            backdrop-filter: blur(28px) saturate(190%);
+            -webkit-backdrop-filter: blur(28px) saturate(190%);
+        }
+
+        /* M3 / macOS Switch */
+        .mac-switch-input:checked+.mac-switch-bg {
+            background-color: #D0BCFF;
+        }
+
+        .mac-switch-input:checked+.mac-switch-bg .mac-switch-thumb {
+            transform: translateX(18px);
+            background-color: #381E72;
+        }
+
+        /* Live Video Feed Simulation Grid Effect */
+        .video-grid-bg {
+            background-size: 20px 20px;
+            background-image: radial-gradient(circle, rgba(208, 188, 255, 0.15) 1px, transparent 1px);
+        }
+
+        /* Interactive Card Transitions */
+        .mac-card {
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .mac-card:hover {
+            border-color: rgba(208, 188, 255, 0.25);
+        }
+
+        /* Pulse Radar Animation */
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(0.95);
+                opacity: 0.8;
+            }
+
+            50% {
+                transform: scale(1.08);
+                opacity: 0.4;
+            }
+
+            100% {
+                transform: scale(0.95);
+                opacity: 0.8;
+            }
+        }
+
+        .pulse-radar {
+            animation: pulse-ring 3s infinite ease-in-out;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-slate-950 text-slate-100 min-h-screen flex items-center justify-center p-2 sm:p-6 font-sans antialiased bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-black select-none">
+
+    <!-- Desktop App Window Frame (macOS Style) -->
+    <div
+        class="w-full max-w-[1120px] h-[780px] bg-mac-bg mac-window-glass rounded-2xl shadow-2xl border border-mac-border flex flex-col overflow-hidden relative">
+
+        <!-- Titlebar (macOS Window Controls + Drag Area) -->
+        <header
+            class="h-11 px-4 bg-slate-900/40 border-b border-mac-border flex items-center justify-between shrink-0 z-50">
+
+            <!-- Traffic Light Buttons -->
+            <div class="flex items-center space-x-2 w-24">
+                <button onclick="showToast('Fechando Nexus Desktop...')"
+                    class="w-3 h-3 rounded-full bg-red-500 hover:bg-red-600 flex items-center justify-center text-black/60 group transition">
+                    <span
+                        class="material-symbols-outlined text-[10px] opacity-0 group-hover:opacity-100 font-bold">close</span>
+                </button>
+                <button onclick="showToast('Minimizando para a Menu Bar')"
+                    class="w-3 h-3 rounded-full bg-amber-500 hover:bg-amber-600 flex items-center justify-center text-black/60 group transition">
+                    <span
+                        class="material-symbols-outlined text-[10px] opacity-0 group-hover:opacity-100 font-bold">remove</span>
+                </button>
+                <button onclick="showToast('Expandir tela cheia')"
+                    class="w-3 h-3 rounded-full bg-emerald-500 hover:bg-emerald-600 flex items-center justify-center text-black/60 group transition">
+                    <span
+                        class="material-symbols-outlined text-[10px] opacity-0 group-hover:opacity-100 font-bold">open_in_full</span>
+                </button>
+            </div>
+
+            <!-- App Title Header -->
+            <div class="flex items-center space-x-2 text-xs font-semibold text-slate-300">
+                <span class="material-symbols-outlined text-purple-400 text-base">laptop_mac</span>
+                <span>Nexus Desktop for macOS</span>
+                <span
+                    class="text-[10px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded-full border border-purple-500/30">v2.4
+                    Pro</span>
+            </div>
+
+        </header>
+
+        <!-- App Body Grid Layout (Sidebar + Main Content) -->
+        <div class="flex-1 flex overflow-hidden">
+
+            <!-- LEFT SIDEBAR -->
+            <aside class="w-64 bg-mac-sidebar border-r border-mac-border flex flex-col justify-between p-3.5 shrink-0">
+
+                <div class="space-y-6">
+                    <!-- Active Connected Smartphone Badge -->
+                    <div
+                        class="bg-mac-surfaceVariant/60 border border-mac-border rounded-2xl p-3 flex items-center space-x-3">
+                        <div class="relative shrink-0">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-purple-600/30 border border-mac-accent flex items-center justify-center text-mac-accent">
+                                <span class="material-symbols-outlined text-2xl">smartphone</span>
+                            </div>
+                            <span
+                                class="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-emerald-400 border-2 border-mac-sidebar rounded-full"></span>
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <h3 class="text-xs font-bold text-slate-100 truncate">Pixel 8 Pro</h3>
+                            <p class="text-[10px] text-slate-400 truncate">Wi-Fi 5GHz • 85% bat</p>
+                            <span class="text-[9px] text-emerald-400 font-mono flex items-center mt-0.5">
+                                <span class="w-1 h-1 bg-emerald-400 rounded-full mr-1"></span>
+                                Ping: 11ms
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Links -->
+                    <nav class="space-y-1">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider px-3 mb-2 block">Menu
+                            Principal</span>
+
+                        <a href="#" onclick="switchTab(this, 'Visão Geral')"
+                            class="nav-item active flex items-center space-x-3 px-3 py-2.5 rounded-xl bg-mac-activeTab text-mac-accent font-semibold text-xs border border-purple-500/20 transition">
+                            <span class="material-symbols-outlined text-lg filled">dashboard</span>
+                            <span>Painel Geral</span>
+                        </a>
+
+                        <a href="#" onclick="switchTab(this, 'Câmera & Espelhamento')"
+                            class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-white/5 font-medium text-xs transition">
+                            <span class="material-symbols-outlined text-lg">videocam</span>
+                            <span>Câmera & Espelhamento</span>
+                        </a>
+
+                        <a href="#" onclick="switchTab(this, 'Dispositivos Vinculados')"
+                            class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-white/5 font-medium text-xs transition">
+                            <span class="material-symbols-outlined text-lg">devices</span>
+                            <span>Dispositivos Vinculados</span>
+                        </a>
+
+                        <a href="#" onclick="switchTab(this, 'Transferências de Arquivos')"
+                            class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-white/5 font-medium text-xs transition">
+                            <span class="material-symbols-outlined text-lg">swap_horiz</span>
+                            <span>Transferências</span>
+                            <span
+                                class="ml-auto bg-purple-500/20 text-purple-300 text-[10px] px-2 py-0.5 rounded-full font-mono">1</span>
+                        </a>
+
+                        <a href="#" onclick="switchTab(this, 'Preferências')"
+                            class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-xl text-slate-300 hover:bg-white/5 font-medium text-xs transition">
+                            <span class="material-symbols-outlined text-lg">settings</span>
+                            <span>Preferências</span>
+                        </a>
+                    </nav>
+                </div>
+
+                <!-- Sidebar Footer: Daemon Status Info Card -->
+                <div class="bg-slate-900/60 border border-mac-border rounded-2xl p-3 space-y-2">
+                    <div class="flex justify-between items-center text-[10px] text-slate-400 font-mono">
+                        <span>Daemon Process:</span>
+                        <span class="text-emerald-400 font-bold">PID 8821</span>
+                    </div>
+                    <div class="flex justify-between items-center text-[10px] text-slate-400 font-mono">
+                        <span>Escutando:</span>
+                        <span class="text-purple-300">127.0.0.1:8080</span>
+                    </div>
+                    <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-[11px]">
+                        <span class="text-slate-300 font-medium">Auto-Sync macOS</span>
+                        <span class="material-symbols-outlined text-emerald-400 text-base">check_circle</span>
+                    </div>
+                </div>
+
+            </aside>
+
+            <!-- RIGHT MAIN CONTENT AREA -->
+            <main class="flex-1 overflow-y-auto p-6 space-y-6">
+
+                <!-- Header Banner & Mac Greeting -->
+                <div class="flex justify-between items-start">
+                    <div>
+                        <span class="text-xs font-semibold text-purple-300 uppercase tracking-wider block">Estação de
+                            Trabalho • MacBook Pro</span>
+                        <h1 class="text-2xl font-bold text-slate-100">Painel do Nexus</h1>
+                    </div>
+
+                    <div class="flex items-center space-x-3">
+                        <button onclick="showToast('Sincronizando área de transferência com Mac...')"
+                            class="px-3.5 py-2 rounded-xl bg-mac-surfaceVariant hover:bg-slate-800 border border-mac-border text-slate-200 text-xs font-semibold flex items-center space-x-2 transition">
+                            <span class="material-symbols-outlined text-base text-purple-300">sync</span>
+                            <span>Sincronizar Agora</span>
+                        </button>
+                        <button onclick="showToast('Abrindo opções do Daemon')"
+                            class="p-2 rounded-xl bg-mac-surfaceVariant hover:bg-slate-800 border border-mac-border text-slate-200 transition"
+                            title="Configurações Rápidas">
+                            <span class="material-symbols-outlined text-lg">tune</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- GRID SYSTEM: 2 Columns for macOS Dashboard Tiles -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+                    <!-- MODULE 1: Continuity Camera (Live Preview) -->
+                    <div
+                        class="mac-card bg-mac-card border border-mac-border rounded-3xl p-5 space-y-4 shadow-lg flex flex-col justify-between">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center space-x-3">
+                                <div
+                                    class="w-9 h-9 rounded-2xl bg-purple-500/20 text-purple-300 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-xl">videocam</span>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm font-bold text-slate-100">Câmera Continuity</h3>
+                                    <p class="text-[11px] text-slate-400">Stream Ultra HD 4K via Android CameraX</p>
+                                </div>
+                            </div>
+                            <span
+                                class="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-ping"></span>
+                                Transmitindo
+                            </span>
+                        </div>
+
+                        <!-- Video Frame Simulation -->
+                        <div id="video-frame"
+                            class="w-full h-44 bg-slate-950 rounded-2xl border border-slate-800 relative overflow-hidden flex items-center justify-center video-grid-bg">
+                            <div
+                                class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10">
+                            </div>
+
+                            <!-- Simulated Video Subject Outline -->
+                            <div id="camera-avatar"
+                                class="flex flex-col items-center justify-center z-0 transition-transform duration-500">
+                                <div
+                                    class="w-20 h-20 rounded-full bg-purple-500/20 border-2 border-mac-accent/80 flex items-center justify-center shadow-2xl relative">
+                                    <span class="material-symbols-outlined text-4xl text-mac-accent">person</span>
+                                    <div
+                                        class="absolute -top-1 -right-1 w-5 h-5 bg-purple-600 text-white text-[9px] rounded-full flex items-center justify-center font-bold">
+                                        4K</div>
+                                </div>
+                                <span class="text-[11px] text-slate-400 mt-2 font-mono">Pixel 8 Pro • Câmera Principal
+                                    (50MP)</span>
+                            </div>
+
+                            <!-- Center Stage Reticle Animation -->
+                            <div class="absolute w-28 h-28 border border-dashed border-purple-400/50 rounded-full pointer-events-none z-10 animate-spin"
+                                style="animation-duration: 20s;"></div>
+
+                            <!-- Bottom Video Controls overlay -->
+                            <div class="absolute bottom-3 left-3 right-3 z-20 flex items-center justify-between">
+                                <div
+                                    class="flex items-center space-x-1.5 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] text-slate-300 border border-white/10 font-mono">
+                                    <span>60 FPS</span>
+                                    <span>•</span>
+                                    <span>3.2 Mbps</span>
+                                    <span>•</span>
+                                    <span>H.265</span>
+                                </div>
+
+                                <div class="flex items-center space-x-1">
+                                    <button onclick="toggleVideoEffect('Center Stage')"
+                                        class="p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition"
+                                        title="Center Stage">
+                                        <span class="material-symbols-outlined text-sm">filter_center_focus</span>
+                                    </button>
+                                    <button onclick="toggleVideoEffect('Luz de Estúdio')"
+                                        class="p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition"
+                                        title="Luz de Estúdio">
+                                        <span class="material-symbols-outlined text-sm">wb_incandescent</span>
+                                    </button>
+                                    <button onclick="toggleVideoEffect('Desfoque de Fundo')"
+                                        class="p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition"
+                                        title="Retrato">
+                                        <span class="material-symbols-outlined text-sm">blur_on</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action buttons -->
+                        <div class="flex items-center space-x-2">
+                            <button onclick="toggleStream()" id="stream-toggle-btn"
+                                class="flex-1 py-2.5 rounded-2xl bg-mac-accent text-mac-accentDark text-xs font-bold hover:bg-mac-accentHover transition flex items-center justify-center space-x-2">
+                                <span class="material-symbols-outlined text-base">pause_circle</span>
+                                <span id="stream-btn-text">Pausar Streaming</span>
+                            </button>
+                            <button onclick="showToast('Ajustes de vídeo abertos no macOS')"
+                                class="py-2.5 px-4 rounded-2xl bg-mac-surfaceVariant text-slate-200 text-xs font-bold hover:bg-slate-800 border border-mac-border transition flex items-center space-x-1.5">
+                                <span class="material-symbols-outlined text-base">settings</span>
+                                <span>Ajustes</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- MODULE 2: Universal Clipboard macOS Sync -->
+                    <div
+                        class="mac-card bg-mac-card border border-mac-border rounded-3xl p-5 space-y-4 shadow-lg flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <div class="flex items-center space-x-3">
+                                    <div
+                                        class="w-9 h-9 rounded-2xl bg-pink-500/20 text-pink-300 flex items-center justify-center">
+                                        <span class="material-symbols-outlined text-xl">content_paste</span>
+                                    </div>
+                                    <div>
+                                        <h3 class="text-sm font-bold text-slate-100">Área de Transferência Universal
+                                        </h3>
+                                        <p class="text-[11px] text-slate-400">Sincronização bidirecional em tempo real
+                                        </p>
+                                    </div>
+                                </div>
+                                <span
+                                    class="text-[10px] font-mono text-purple-300 bg-purple-500/10 px-2 py-1 rounded-md border border-purple-500/20">Copiado
+                                    há 2m</span>
+                            </div>
+
+                            <!-- Clipboard Content Display Card -->
+                            <div
+                                class="bg-slate-950/70 border border-slate-800 rounded-2xl p-3.5 space-y-2 relative group">
+                                <div
+                                    class="flex items-center justify-between text-[11px] text-slate-400 border-b border-slate-800/80 pb-2">
+                                    <span class="flex items-center gap-1">
+                                        <span
+                                            class="material-symbols-outlined text-sm text-emerald-400">smartphone</span>
+                                        Origem: Android (Pixel 8 Pro)
+                                    </span>
+                                    <span class="font-mono text-[10px] text-slate-500">Texto / Código</span>
+                                </div>
+                                <p id="clipboard-text"
+                                    class="text-xs font-mono text-slate-200 leading-relaxed py-1 break-all">
+                                    https://github.com/nexus-app/macos-daemon/releases/tag/v2.4.0
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Clipboard Actions -->
+                        <div class="grid grid-cols-2 gap-2 pt-2">
+                            <button onclick="copyToMacClipboard()"
+                                class="py-2.5 px-3 rounded-2xl bg-mac-primaryContainer text-mac-accent text-xs font-bold hover:opacity-90 transition flex items-center justify-center space-x-2">
+                                <span class="material-symbols-outlined text-base">assignment_return</span>
+                                <span>Copiar para o Mac</span>
+                            </button>
+
+                            <button onclick="sendTextToAndroid()"
+                                class="py-2.5 px-3 rounded-2xl bg-mac-surfaceVariant text-slate-200 text-xs font-bold hover:bg-slate-800 border border-mac-border transition flex items-center justify-center space-x-2">
+                                <span class="material-symbols-outlined text-base">send_to_mobile</span>
+                                <span>Enviar texto ao celular</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- MODULE 3: Recent Transfers Queue -->
+                    <div
+                        class="mac-card bg-mac-card border border-mac-border rounded-3xl p-5 space-y-4 shadow-lg lg:col-span-2">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center space-x-3">
+                                <div
+                                    class="w-9 h-9 rounded-2xl bg-blue-500/20 text-blue-300 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-xl">folder_zip</span>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm font-bold text-slate-100">Fila de Transferências Recentes</h3>
+                                    <p class="text-[11px] text-slate-400">Transferência direta via Wi-Fi Direct (Nativa
+                                        macOS)</p>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center space-x-2">
+                                <button onclick="simulateNewTransfer()"
+                                    class="py-1.5 px-3 rounded-xl bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 text-xs font-bold border border-purple-500/30 transition flex items-center space-x-1">
+                                    <span class="material-symbols-outlined text-base">add</span>
+                                    <span>Enviar Arquivo ao Celular</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Transfer List Table / Items -->
+                        <div class="space-y-3">
+
+                            <!-- Item 1 (In progress) -->
+                            <div
+                                class="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                                <div class="flex items-center space-x-3 min-w-0">
+                                    <div
+                                        class="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-300 flex items-center justify-center shrink-0">
+                                        <span class="material-symbols-outlined text-xl">movie</span>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <h4 class="text-xs font-bold text-slate-200 truncate">
+                                            Gravacao_Apresentacao_Keynote_4K.mov</h4>
+                                        <p class="text-[10px] text-slate-400">Enviando para Android • 1.2 GB de 1.8 GB
+                                            (45 MB/s)</p>
+                                    </div>
+                                </div>
+
+                                <div class="w-full sm:w-48 space-y-1">
+                                    <div class="flex justify-between items-center text-[10px] font-mono">
+                                        <span class="text-purple-300">65% concluído</span>
+                                        <span class="text-slate-400">ETA 12s</span>
+                                    </div>
+                                    <div class="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                                        <div id="mac-transfer-bar"
+                                            class="h-full bg-mac-accent rounded-full transition-all duration-300"
+                                            style="width: 65%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Item 2 (Completed) -->
+                            <div
+                                class="bg-slate-950/40 border border-slate-800/50 rounded-2xl p-3 flex items-center justify-between">
+                                <div class="flex items-center space-x-3 min-w-0">
+                                    <div
+                                        class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center shrink-0">
+                                        <span class="material-symbols-outlined text-lg">image</span>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <h4 class="text-xs font-medium text-slate-300 truncate">
+                                            Captura_de_Tela_macOS_Sonoma.png</h4>
+                                        <p class="text-[10px] text-slate-500">Recebido do Android • 4.2 MB • Concluído
+                                        </p>
+                                    </div>
+                                </div>
+                                <span
+                                    class="px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-bold border border-emerald-500/20 shrink-0">
+                                    Concluído
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- MODULE 4: Quick macOS Daemon System Controls -->
+                    <div
+                        class="mac-card bg-mac-card border border-mac-border rounded-3xl p-5 space-y-4 shadow-lg lg:col-span-2">
+                        <h3 class="text-xs font-bold tracking-wider text-slate-400 uppercase">Controles Rápidos do macOS
+                            System Daemon</h3>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+
+                            <!-- Toggle 1 -->
+                            <div
+                                class="bg-slate-950/50 border border-slate-800 p-3.5 rounded-2xl flex items-center justify-between">
+                                <div class="flex items-center space-x-2.5">
+                                    <span
+                                        class="material-symbols-outlined text-purple-300 text-lg">power_settings_new</span>
+                                    <div>
+                                        <h4 class="text-xs font-bold text-slate-200">Iniciar no Boot</h4>
+                                        <p class="text-[10px] text-slate-400">Abrir daemon no login do Mac</p>
+                                    </div>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                                    <input type="checkbox" checked
+                                        onchange="showToast('Iniciar no Boot do macOS atualizado')"
+                                        class="sr-only mac-switch-input">
+                                    <div
+                                        class="w-10 h-5 bg-mac-surfaceVariant rounded-full mac-switch-bg p-0.5 transition-colors">
+                                        <div
+                                            class="w-4 h-4 bg-slate-400 rounded-full mac-switch-thumb transition-transform shadow-md">
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <!-- Toggle 2 -->
+                            <div
+                                class="bg-slate-950/50 border border-slate-800 p-3.5 rounded-2xl flex items-center justify-between">
+                                <div class="flex items-center space-x-2.5">
+                                    <span
+                                        class="material-symbols-outlined text-amber-300 text-lg">do_not_disturb_on</span>
+                                    <div>
+                                        <h4 class="text-xs font-bold text-slate-200">Espelhar Não Perturbar</h4>
+                                        <p class="text-[10px] text-slate-400">Sincronizar Foco do macOS</p>
+                                    </div>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                                    <input type="checkbox" checked onchange="showToast('Modo Foco sincronizado')"
+                                        class="sr-only mac-switch-input">
+                                    <div
+                                        class="w-10 h-5 bg-mac-surfaceVariant rounded-full mac-switch-bg p-0.5 transition-colors">
+                                        <div
+                                            class="w-4 h-4 bg-slate-400 rounded-full mac-switch-thumb transition-transform shadow-md">
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <!-- Toggle 3 -->
+                            <div
+                                class="bg-slate-950/50 border border-slate-800 p-3.5 rounded-2xl flex items-center justify-between">
+                                <div class="flex items-center space-x-2.5">
+                                    <span class="material-symbols-outlined text-cyan-300 text-lg">speed</span>
+                                    <div>
+                                        <h4 class="text-xs font-bold text-slate-200">Modo Baixa Latência</h4>
+                                        <p class="text-[10px] text-slate-400">Priorizar buffer de vídeo 60fps</p>
+                                    </div>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                                    <input type="checkbox" checked onchange="showToast('Otimização de rede ativada')"
+                                        class="sr-only mac-switch-input">
+                                    <div
+                                        class="w-10 h-5 bg-mac-surfaceVariant rounded-full mac-switch-bg p-0.5 transition-colors">
+                                        <div
+                                            class="w-4 h-4 bg-slate-400 rounded-full mac-switch-thumb transition-transform shadow-md">
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </main>
+
+        </div>
+
+        <!-- macOS Toast Banner Notification -->
+        <div id="mac-toast"
+            class="absolute bottom-5 right-5 bg-slate-900/95 border border-purple-500/30 text-slate-100 px-4 py-3 rounded-2xl shadow-2xl flex items-center space-x-3 z-50 pointer-events-none opacity-0 translate-y-4 transition-all duration-300 backdrop-blur-md">
+            <div class="w-8 h-8 rounded-xl bg-purple-500/20 text-purple-300 flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined text-lg">laptop_mac</span>
+            </div>
+            <div>
+                <h5 class="text-xs font-bold text-slate-100">Nexus Daemon macOS</h5>
+                <p id="mac-toast-message" class="text-[11px] text-slate-300">Mensagem do sistema</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Interactive Logic -->
+    <script>
+        // Toast Notification logic
+        let toastTimer;
+        function showToast(msg) {
+            const toast = document.getElementById('mac-toast');
+            const msgElem = document.getElementById('mac-toast-message');
+
+            msgElem.textContent = msg;
+            toast.classList.remove('opacity-0', 'translate-y-4');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', 'translate-y-4');
+            }, 2800);
+        }
+
+        // Sidebar Navigation active state
+        function switchTab(element, tabName) {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active', 'bg-mac-activeTab', 'text-mac-accent', 'border', 'border-purple-500/20', 'font-semibold');
+                item.classList.add('text-slate-300', 'font-medium');
+                const icon = item.querySelector('.material-symbols-outlined');
+                if (icon) icon.classList.remove('filled');
+            });
+
+            element.classList.add('active', 'bg-mac-activeTab', 'text-mac-accent', 'border', 'border-purple-500/20', 'font-semibold');
+            element.classList.remove('text-slate-300', 'font-medium');
+            const icon = element.querySelector('.material-symbols-outlined');
+            if (icon) icon.classList.add('filled');
+
+            showToast(`Navegando para: ${tabName}`);
+        }
+
+        // Toggle Stream Logic
+        let isStreaming = true;
+        function toggleStream() {
+            const btnText = document.getElementById('stream-btn-text');
+            const avatar = document.getElementById('camera-avatar');
+
+            isStreaming = !isStreaming;
+            if (isStreaming) {
+                btnText.textContent = "Pausar Streaming";
+                avatar.style.opacity = "1";
+                showToast("Streaming da Câmera Continuity retomado.");
+            } else {
+                btnText.textContent = "Retomar Streaming";
+                avatar.style.opacity = "0.2";
+                showToast("Streaming de vídeo pausado no Mac.");
+            }
+        }
+
+        // Video Effects Trigger
+        function toggleVideoEffect(effectName) {
+            showToast(`Efeito de Câmera: ${effectName} ativado!`);
+        }
+
+        // Clipboard Copy
+        function copyToMacClipboard() {
+            const text = document.getElementById('clipboard-text').textContent.trim();
+            navigator.clipboard.writeText(text).then(() => {
+                showToast("Link copiado para a Área de Transferência do macOS!");
+            }).catch(() => {
+                showToast("Copiado com sucesso!");
+            });
+        }
+
+        // Send Text
+        function sendTextToAndroid() {
+            showToast("Texto enviado para a área de transferência do Pixel 8 Pro!");
+        }
+
+        // Simulated Progress Bar Movement
+        let progress = 65;
+        setInterval(() => {
+            progress += 1;
+            if (progress > 100) progress = 20;
+            const bar = document.getElementById('mac-transfer-bar');
+            if (bar) bar.style.width = progress + '%';
+        }, 400);
+
+        // Simulate New Transfer
+        function simulateNewTransfer() {
+            showToast("Selecione um arquivo no Finder para enviar ao Android...");
+        }
+    </script>
+
+</body>
+
+</html>

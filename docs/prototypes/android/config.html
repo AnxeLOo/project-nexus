@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus - Ajustes (Material You)</title>
+
+    <!-- Fonts & Material Symbols -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        m3: {
+                            bg: '#141318',
+                            surface: '#1D1B20',
+                            surfaceVariant: '#2A2830',
+                            surfaceHigh: '#35333C',
+                            primary: '#D0BCFF',
+                            onPrimary: '#381E72',
+                            primaryContainer: '#4F378B',
+                            onPrimaryContainer: '#EADDFF',
+                            secondaryContainer: '#4A4458',
+                            onSecondaryContainer: '#E8DEF8',
+                            tertiaryContainer: '#633B48',
+                            onTertiaryContainer: '#FFD8E4',
+                            errorContainer: '#8C1D18',
+                            onErrorContainer: '#F2B8B5',
+                            outline: '#938F99',
+                            outlineVariant: '#49454F',
+                            activeTile: '#362F4A',
+                            activeTileBorder: '#D0BCFF'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        '3xl': '1.75rem',
+                        '4xl': '2rem',
+                        '5xl': '2.5rem',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar & Material Symbols Settings */
+        ::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            user-select: none;
+        }
+
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* M3 Switch Component Styling */
+        .m3-switch-bg {
+            transition: background-color 0.25s cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        .m3-switch-thumb {
+            transition: transform 0.25s cubic-bezier(0.2, 0, 0, 1), background-color 0.25s cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        .m3-switch-input:checked+.m3-switch-bg {
+            background-color: #D0BCFF;
+        }
+
+        .m3-switch-input:checked+.m3-switch-bg .m3-switch-thumb {
+            transform: translateX(20px);
+            background-color: #381E72;
+        }
+
+        /* Interactive Card Scale */
+        .m3-clickable-card {
+            transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), background-color 0.2s ease;
+        }
+
+        .m3-clickable-card:active {
+            transform: scale(0.98);
+        }
+
+        /* Dialog Backdrop & Animation */
+        .m3-dialog-backdrop {
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+        }
+
+        .m3-dialog-content {
+            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.25s ease;
+        }
+
+        /* Toast Animation */
+        #toast {
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+        }
+
+        /* Smooth Progress Bar Transitions */
+        .progress-bar-fill {
+            transition: width 0.4s cubic-bezier(0.2, 0, 0, 1);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-slate-950 text-slate-100 min-h-screen flex items-center justify-center p-0 sm:p-4 font-sans antialiased">
+
+    <!-- Mobile Frame Simulator -->
+    <div
+        class="w-full max-w-[412px] h-[100vh] sm:h-[870px] bg-m3-bg sm:rounded-[48px] shadow-2xl flex flex-col justify-between overflow-hidden relative border border-slate-800/80">
+
+        <!-- Android Status Bar -->
+        <div
+            class="w-full pt-3 px-6 pb-2 flex justify-between items-center text-xs font-medium text-slate-300 z-30 select-none">
+            <span id="current-time">09:41</span>
+            <div class="flex items-center space-x-2">
+                <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"
+                    title="Nexus Link Ativo"></span>
+                <span class="material-symbols-outlined text-[16px]">wifi</span>
+                <span class="material-symbols-outlined text-[16px]">bluetooth</span>
+                <div class="flex items-center gap-0.5 border border-slate-400/50 rounded-sm px-1 py-0.5">
+                    <span class="text-[10px]">92%</span>
+                    <span class="material-symbols-outlined text-[12px]">battery_full</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scrollable Settings Screen Content -->
+        <main class="flex-1 overflow-y-auto px-5 pt-2 pb-28 space-y-5">
+
+            <!-- Top Header -->
+            <header class="flex justify-between items-center pt-2">
+                <div>
+                    <span class="text-xs font-medium text-purple-300 tracking-wider uppercase block">Preferências do
+                        Nexus</span>
+                    <h1 class="text-xl font-bold text-slate-100">Configurações</h1>
+                </div>
+
+                <div class="flex items-center space-x-1">
+                    <button onclick="showToast('Pesquisar configurações...')"
+                        class="w-10 h-10 rounded-full bg-m3-surfaceVariant text-slate-300 flex items-center justify-center hover:text-slate-100 active:scale-95 transition"
+                        title="Pesquisar">
+                        <span class="material-symbols-outlined text-xl">search</span>
+                    </button>
+                    <button onclick="showToast('Central de Ajuda Nexus')"
+                        class="w-10 h-10 rounded-full bg-m3-surfaceVariant text-slate-300 flex items-center justify-center hover:text-slate-100 active:scale-95 transition"
+                        title="Ajuda & Suporte">
+                        <span class="material-symbols-outlined text-xl">help_outline</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- SECTION 1: Profile & Account Management (Featured Top Card) -->
+            <section
+                class="bg-m3-surface border border-m3-primaryContainer/60 rounded-3xl p-4 space-y-4 shadow-md relative overflow-hidden">
+                <!-- Account Info Header -->
+                <div class="flex items-start space-x-3.5">
+                    <div class="relative">
+                        <div
+                            class="w-14 h-14 rounded-full bg-purple-600/30 border-2 border-m3-primary flex items-center justify-center overflow-hidden shadow-inner">
+                            <span class="material-symbols-outlined text-3xl text-m3-primary">person</span>
+                        </div>
+                        <span
+                            class="absolute bottom-0 right-0 w-4 h-4 bg-emerald-400 border-2 border-m3-bg rounded-full"
+                            title="Online no macOS"></span>
+                    </div>
+
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center space-x-2">
+                            <h2 class="text-base font-bold text-slate-100 truncate">Alexandre Silva</h2>
+                            <span class="material-symbols-outlined text-sm text-purple-300"
+                                title="Conta Verificada">verified</span>
+                        </div>
+                        <p class="text-xs text-slate-400 truncate">alexandre.silva@icloud.com</p>
+
+                        <div class="mt-1.5 flex items-center space-x-1.5">
+                            <span
+                                class="px-2.5 py-0.5 rounded-full bg-m3-primaryContainer text-m3-onPrimaryContainer text-[10px] font-bold tracking-wide">
+                                Nexus Pro
+                            </span>
+                            <span class="text-[10px] text-emerald-400 font-medium flex items-center">
+                                <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full inline-block mr-1"></span>
+                                macOS Sync Ativo
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Actions (Outlined & Tonal Buttons) -->
+                <div class="grid grid-cols-2 gap-2 pt-1 border-t border-slate-800/80">
+                    <button onclick="showToast('Gerenciar Dados do Perfil')"
+                        class="m3-clickable-card py-2 px-3 rounded-2xl bg-m3-surfaceVariant text-slate-200 text-xs font-semibold flex items-center justify-center space-x-1.5 border border-slate-700/50">
+                        <span class="material-symbols-outlined text-base">badge</span>
+                        <span>Gerenciar Perfil</span>
+                    </button>
+
+                    <button onclick="showToast('Abrindo Políticas de Privacidade')"
+                        class="m3-clickable-card py-2 px-3 rounded-2xl bg-m3-surfaceVariant text-slate-200 text-xs font-semibold flex items-center justify-center space-x-1.5 border border-slate-700/50">
+                        <span class="material-symbols-outlined text-base">security</span>
+                        <span>Privacidade & Dados</span>
+                    </button>
+                </div>
+
+                <!-- Account Switch & Logout Row -->
+                <div class="flex items-center space-x-2 pt-1">
+                    <button onclick="showToast('Selecione outra conta para alternar')"
+                        class="flex-1 py-2 px-3 rounded-2xl bg-m3-secondaryContainer text-m3-onSecondaryContainer text-xs font-bold flex items-center justify-center space-x-1.5 active:scale-95 transition">
+                        <span class="material-symbols-outlined text-base">sync_lock</span>
+                        <span>Trocar de Conta</span>
+                    </button>
+
+                    <button onclick="openLogoutDialog()"
+                        class="py-2 px-4 rounded-2xl bg-m3-errorContainer/80 hover:bg-m3-errorContainer text-m3-onErrorContainer text-xs font-bold flex items-center justify-center space-x-1.5 active:scale-95 transition border border-red-500/30">
+                        <span class="material-symbols-outlined text-base">logout</span>
+                        <span>Sair</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- SECTION 2: Connection & Network -->
+            <section class="space-y-2">
+                <h3 class="text-xs font-bold tracking-wider text-slate-400 uppercase px-1">Conexão & Rede</h3>
+                <div class="bg-m3-surface border border-slate-800/80 rounded-3xl p-1 divide-y divide-slate-800/60">
+
+                    <!-- Wi-Fi Direct & Bluetooth LE -->
+                    <div class="p-3.5 flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div
+                                class="w-9 h-9 rounded-2xl bg-purple-500/20 text-purple-300 flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-xl">wifi_tethering</span>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-200">Wi-Fi Direct & Bluetooth LE</h4>
+                                <p class="text-[10px] text-slate-400">Canal de alta velocidade automático</p>
+                            </div>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                            <input type="checkbox" checked onchange="toggleSetting('Wi-Fi Direct', this.checked)"
+                                class="sr-only m3-switch-input">
+                            <div class="w-11 h-6 bg-m3-surfaceVariant rounded-full m3-switch-bg p-0.5">
+                                <div class="w-5 h-5 bg-m3-outline rounded-full m3-switch-thumb shadow-md"></div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Auto-Reconnection -->
+                    <div class="p-3.5 flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div
+                                class="w-9 h-9 rounded-2xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-xl">autorenew</span>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-200">Reconexão Automática</h4>
+                                <p class="text-[10px] text-slate-400">Emparelhar ao aproximar do Mac</p>
+                            </div>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                            <input type="checkbox" checked
+                                onchange="toggleSetting('Reconexão Automática', this.checked)"
+                                class="sr-only m3-switch-input">
+                            <div class="w-11 h-6 bg-m3-surfaceVariant rounded-full m3-switch-bg p-0.5">
+                                <div class="w-5 h-5 bg-m3-outline rounded-full m3-switch-thumb shadow-md"></div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Local Network Discovery -->
+                    <div onclick="showToast('IP Local: 192.168.1.105 : 8821')"
+                        class="p-3.5 flex items-center justify-between m3-clickable-card cursor-pointer">
+                        <div class="flex items-center space-x-3">
+                            <div
+                                class="w-9 h-9 rounded-2xl bg-blue-500/20 text-blue-300 flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-xl">lan</span>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-200">Rede Local (mDNS)</h4>
+                                <p class="text-[10px] text-slate-400">IP: 192.168.1.105 • Porta: 8821</p>
+                            </div>
+                        </div>
+                        <span class="material-symbols-outlined text-slate-500 text-lg">chevron_right</span>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- SECTION 3: macOS Integration -->
+            <section class="space-y-2">
+                <h3 class="text-xs font-bold tracking-wider text-slate-400 uppercase px-1">Integração macOS</h3>
+                <div class="bg-m3-surface border border-slate-800/80 rounded-3xl p-1 divide-y divide-slate-800/60">
+
+                    <!-- Continuity Camera Settings -->
+                    <div onclick="showToast('Ajustes de Qualidade da Câmera Continuity')"
+                        class="p-3.5 flex items-center justify-between m3-clickable-card cursor-pointer">
+                        <div class="flex items-center space-x-3">
+                            <div
+                                class="w-9 h-9 rounded-2xl bg-purple-500/20 text-purple-300 flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-xl">videocam</span>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-200">Câmera Continuity</h4>
+                                <p class="text-[10px] text-slate-400">Prioridade: Baixa Latência (4K 60fps)</p>
+                            </div>
+                        </div>
+                        <span class="material-symbols-outlined text-slate-500 text-lg">chevron_right</span>
+                    </div>
+
+                    <!-- Universal Clipboard Sync History -->
+                    <div onclick="showToast('Histórico do Clipboard mantido por 24 horas')"
+                        class="p-3.5 flex items-center justify-between m3-clickable-card cursor-pointer">
+                        <div class="flex items-center space-x-3">
+                            <div
+                                class="w-9 h-9 rounded-2xl bg-pink-500/20 text-pink-300 flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-xl">content_paste</span>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-200">Área de Transferência Universal</h4>
+                                <p class="text-[10px] text-slate-400">Histórico de sincronização: 24h</p>
+                            </div>
+                        </div>
+                        <span class="material-symbols-outlined text-slate-500 text-lg">chevron_right</span>
+                    </div>
+
+                    <!-- Quick Touch Commands -->
+                    <div class="p-3.5 flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div
+                                class="w-9 h-9 rounded-2xl bg-amber-500/20 text-amber-300 flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-xl">touch_app</span>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-200">Atalhos Touch macOS</h4>
+                                <p class="text-[10px] text-slate-400">Gesticular toque para acionar comandos</p>
+                            </div>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                            <input type="checkbox" checked onchange="toggleSetting('Atalhos Touch', this.checked)"
+                                class="sr-only m3-switch-input">
+                            <div class="w-11 h-6 bg-m3-surfaceVariant rounded-full m3-switch-bg p-0.5">
+                                <div class="w-5 h-5 bg-m3-outline rounded-full m3-switch-thumb shadow-md"></div>
+                            </div>
+                        </label>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- SECTION 4: Storage & Files -->
+            <section class="space-y-2">
+                <h3 class="text-xs font-bold tracking-wider text-slate-400 uppercase px-1">Armazenamento & Arquivos</h3>
+                <div class="bg-m3-surface border border-slate-800/80 rounded-3xl p-4 space-y-3">
+
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div
+                                class="w-9 h-9 rounded-2xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-xl">folder_zip</span>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-200">Diretório de Downloads</h4>
+                                <p class="text-[10px] font-mono text-purple-300">/Internal/NexusDownloads/</p>
+                            </div>
+                        </div>
+                        <button onclick="showToast('Alterar pasta de destino')"
+                            class="p-2 rounded-full bg-m3-surfaceVariant text-slate-300 hover:text-slate-100">
+                            <span class="material-symbols-outlined text-base">edit</span>
+                        </button>
+                    </div>
+
+                    <!-- Cache Usage Bar -->
+                    <div class="space-y-1.5 pt-1 border-t border-slate-800/80">
+                        <div class="flex justify-between items-center text-xs">
+                            <span class="text-slate-300 font-medium">Cache Temporário de Transferência</span>
+                            <span id="cache-size-text" class="font-mono text-xs font-semibold text-purple-300">248.5
+                                MB</span>
+                        </div>
+
+                        <div class="w-full h-2 bg-m3-surfaceVariant rounded-full overflow-hidden">
+                            <div id="cache-bar" class="progress-bar-fill h-full bg-m3-primary rounded-full"
+                                style="width: 45%;"></div>
+                        </div>
+                    </div>
+
+                    <button onclick="clearCache()"
+                        class="w-full py-2.5 rounded-2xl bg-m3-surfaceVariant hover:bg-m3-surfaceHigh text-slate-200 text-xs font-bold flex items-center justify-center space-x-2 transition active:scale-95">
+                        <span class="material-symbols-outlined text-base">cleaning_services</span>
+                        <span>Limpar Cache Temporário</span>
+                    </button>
+
+                </div>
+            </section>
+
+            <!-- SECTION 5: Appearance & Notifications -->
+            <section class="space-y-2">
+                <h3 class="text-xs font-bold tracking-wider text-slate-400 uppercase px-1">Aparência & Notificações</h3>
+                <div class="bg-m3-surface border border-slate-800/80 rounded-3xl p-4 space-y-4">
+
+                    <!-- Theme Selector Chips -->
+                    <div>
+                        <h4 class="text-xs font-bold text-slate-200 mb-2">Tema da Interface</h4>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button onclick="selectTheme('dynamic')" id="theme-dynamic"
+                                class="theme-chip py-2 px-2 rounded-2xl bg-m3-primaryContainer text-m3-onPrimaryContainer text-[11px] font-bold flex items-center justify-center space-x-1 border border-m3-primary">
+                                <span class="material-symbols-outlined text-sm">palette</span>
+                                <span>Dinâmico</span>
+                            </button>
+
+                            <button onclick="selectTheme('dark')" id="theme-dark"
+                                class="theme-chip py-2 px-2 rounded-2xl bg-m3-surfaceVariant text-slate-300 text-[11px] font-medium flex items-center justify-center space-x-1 border border-transparent">
+                                <span class="material-symbols-outlined text-sm">dark_mode</span>
+                                <span>Escuro</span>
+                            </button>
+
+                            <button onclick="selectTheme('light')" id="theme-light"
+                                class="theme-chip py-2 px-2 rounded-2xl bg-m3-surfaceVariant text-slate-300 text-[11px] font-medium flex items-center justify-center space-x-1 border border-transparent">
+                                <span class="material-symbols-outlined text-sm">light_mode</span>
+                                <span>Claro</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Notification Toggles -->
+                    <div class="pt-2 border-t border-slate-800/80 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-slate-200 font-medium">Notificar Transferências Concluídas</span>
+                            <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                                <input type="checkbox" checked
+                                    onchange="toggleSetting('Notificações de Transferência', this.checked)"
+                                    class="sr-only m3-switch-input">
+                                <div class="w-11 h-6 bg-m3-surfaceVariant rounded-full m3-switch-bg p-0.5">
+                                    <div class="w-5 h-5 bg-m3-outline rounded-full m3-switch-thumb shadow-md"></div>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs text-slate-200 font-medium">Alertar Desconexão do Mac</span>
+                            <label class="relative inline-flex items-center cursor-pointer shrink-0">
+                                <input type="checkbox" checked
+                                    onchange="toggleSetting('Alerta de Desconexão', this.checked)"
+                                    class="sr-only m3-switch-input">
+                                <div class="w-11 h-6 bg-m3-surfaceVariant rounded-full m3-switch-bg p-0.5">
+                                    <div class="w-5 h-5 bg-m3-outline rounded-full m3-switch-thumb shadow-md"></div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- SECTION 6: About Nexus -->
+            <section class="space-y-2">
+                <h3 class="text-xs font-bold tracking-wider text-slate-400 uppercase px-1">Sobre o Nexus</h3>
+                <div class="bg-m3-surface border border-slate-800/80 rounded-3xl p-1 divide-y divide-slate-800/60">
+
+                    <div onclick="showToast('Versão mais recente instalada!')"
+                        class="p-3.5 flex items-center justify-between m3-clickable-card cursor-pointer">
+                        <div class="flex items-center space-x-3">
+                            <div
+                                class="w-9 h-9 rounded-2xl bg-purple-500/20 text-purple-300 flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-xl">info</span>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-slate-200">Nexus para Android & macOS</h4>
+                                <p class="text-[10px] text-slate-400 font-mono">v2.4.0-build.8821 (Pro)</p>
+                            </div>
+                        </div>
+                        <span
+                            class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">Atualizado</span>
+                    </div>
+
+                    <div onclick="showToast('Abrindo Termos de Licença')"
+                        class="p-3.5 flex items-center justify-between m3-clickable-card cursor-pointer">
+                        <span class="text-xs font-semibold text-slate-300 pl-2">Termos de Uso & Licença</span>
+                        <span class="material-symbols-outlined text-slate-500 text-lg">open_in_new</span>
+                    </div>
+
+                    <div onclick="showToast('Código Aberto no GitHub')"
+                        class="p-3.5 flex items-center justify-between m3-clickable-card cursor-pointer">
+                        <span class="text-xs font-semibold text-slate-300 pl-2">Repositório Open Source</span>
+                        <span class="material-symbols-outlined text-slate-500 text-lg">code</span>
+                    </div>
+
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Material 3 Logout Confirmation Dialog / Modal -->
+        <div id="logout-dialog"
+            class="m3-dialog-backdrop absolute inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-6 opacity-0 invisible">
+            <div
+                class="m3-dialog-content bg-m3-surface border border-slate-700/80 rounded-5xl p-6 w-full max-w-sm space-y-4 shadow-2xl scale-90">
+
+                <div
+                    class="w-12 h-12 rounded-2xl bg-m3-errorContainer text-m3-onErrorContainer flex items-center justify-center">
+                    <span class="material-symbols-outlined text-2xl">logout</span>
+                </div>
+
+                <div>
+                    <h3 class="text-base font-bold text-slate-100">Sair da Conta Nexus?</h3>
+                    <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+                        Ao encerrar a sessão, a sincronização da Câmera Continuity, da Área de Transferência e o envio
+                        direto de arquivos com o seu MacBook serão pausados.
+                    </p>
+                </div>
+
+                <div class="flex items-center justify-end space-x-2 pt-2">
+                    <button onclick="closeLogoutDialog()"
+                        class="px-4 py-2 rounded-full bg-m3-surfaceVariant text-slate-300 text-xs font-bold hover:text-slate-100 transition">
+                        Cancelar
+                    </button>
+                    <button onclick="confirmLogout()"
+                        class="px-5 py-2 rounded-full bg-m3-errorContainer text-m3-onErrorContainer text-xs font-bold hover:opacity-90 transition shadow-md">
+                        Confirmar Saída
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Floating Toast Notification -->
+        <div id="toast"
+            class="absolute bottom-20 left-1/2 -translate-x-1/2 bg-slate-100 text-slate-900 px-4 py-2.5 rounded-full text-xs font-semibold shadow-2xl flex items-center space-x-2 z-50 pointer-events-none opacity-0 translate-y-4">
+            <span class="material-symbols-outlined text-sm text-purple-700">check_circle</span>
+            <span id="toast-message">Mensagem de teste</span>
+        </div>
+
+        <!-- Floating Bottom Navigation Bar (Material You) -->
+        <nav
+            class="absolute bottom-3 left-4 right-4 bg-m3-surface/95 backdrop-blur-md border border-slate-800/80 rounded-full py-2 px-3 flex justify-around items-center shadow-2xl z-40">
+
+            <!-- Nav Item 1: Início -->
+            <button onclick="showToast('Navegando para a página inicial...')"
+                class="nav-item flex flex-col items-center space-y-0.5 text-slate-400 hover:text-slate-200">
+                <div class="px-5 py-1 rounded-full flex items-center justify-center transition-all">
+                    <span class="material-symbols-outlined text-xl">dashboard</span>
+                </div>
+                <span class="text-[10px] font-medium">Início</span>
+            </button>
+
+            <!-- Nav Item 2: Dispositivos -->
+            <button onclick="showToast('Abrindo dispositivos conectados...')"
+                class="nav-item flex flex-col items-center space-y-0.5 text-slate-400 hover:text-slate-200">
+                <div class="px-5 py-1 rounded-full flex items-center justify-center transition-all">
+                    <span class="material-symbols-outlined text-xl">devices</span>
+                </div>
+                <span class="text-[10px] font-medium">Dispositivos</span>
+            </button>
+
+            <!-- Nav Item 3: Transferências -->
+            <button onclick="showToast('Abrindo fila de transferências...')"
+                class="nav-item flex flex-col items-center space-y-0.5 text-slate-400 hover:text-slate-200">
+                <div class="px-5 py-1 rounded-full flex items-center justify-center transition-all">
+                    <span class="material-symbols-outlined text-xl">swap_horiz</span>
+                </div>
+                <span class="text-[10px] font-medium">Transferências</span>
+            </button>
+
+            <!-- Nav Item 4: Ajustes (ACTIVE) -->
+            <button class="nav-item flex flex-col items-center space-y-0.5 text-m3-primary">
+                <div
+                    class="px-5 py-1 rounded-full bg-m3-secondaryContainer text-m3-onSecondaryContainer flex items-center justify-center transition-all">
+                    <span class="material-symbols-outlined text-xl filled">settings</span>
+                </div>
+                <span class="text-[10px] font-medium">Ajustes</span>
+            </button>
+
+        </nav>
+
+        <!-- Android Gesture Navigation Bar -->
+        <div class="w-full pb-2 flex justify-center items-center z-40 pointer-events-none">
+            <div class="w-32 h-1 bg-slate-500/50 rounded-full"></div>
+        </div>
+
+    </div>
+
+    <!-- Interactive JavaScript Logic -->
+    <script>
+        // Real-time Clock
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('current-time').textContent = `${hours}:${minutes}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Toast Controller
+        let toastTimeout;
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+
+            toastMsg.textContent = message;
+            toast.classList.remove('opacity-0', 'translate-y-4');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', 'translate-y-4');
+            }, 2500);
+        }
+
+        // Toggle Setting Switch
+        function toggleSetting(settingName, isChecked) {
+            const status = isChecked ? 'ativado' : 'desativado';
+            showToast(`${settingName} ${status}`);
+        }
+
+        // Theme Selection Chip Logic
+        function selectTheme(theme) {
+            const chips = document.querySelectorAll('.theme-chip');
+            chips.forEach(chip => {
+                chip.classList.replace('bg-m3-primaryContainer', 'bg-m3-surfaceVariant');
+                chip.classList.replace('text-m3-onPrimaryContainer', 'text-slate-300');
+                chip.classList.replace('border-m3-primary', 'border-transparent');
+                chip.classList.replace('font-bold', 'font-medium');
+            });
+
+            const selected = document.getElementById(`theme-${theme}`);
+            if (selected) {
+                selected.classList.replace('bg-m3-surfaceVariant', 'bg-m3-primaryContainer');
+                selected.classList.replace('text-slate-300', 'text-m3-onPrimaryContainer');
+                selected.classList.replace('border-transparent', 'border-m3-primary');
+                selected.classList.replace('font-medium', 'font-bold');
+            }
+
+            showToast(`Tema alterado para ${theme.toUpperCase()}`);
+        }
+
+        // Clear Cache Animation
+        function clearCache() {
+            const cacheBar = document.getElementById('cache-bar');
+            const cacheText = document.getElementById('cache-size-text');
+
+            cacheBar.style.width = '0%';
+            cacheText.textContent = '0.0 MB';
+            showToast('Cache temporário limpo com sucesso!');
+        }
+
+        // Logout Dialog Controls
+        function openLogoutDialog() {
+            const dialog = document.getElementById('logout-dialog');
+            const content = dialog.querySelector('.m3-dialog-content');
+
+            dialog.classList.remove('opacity-0', 'invisible');
+            dialog.classList.add('opacity-100');
+            content.classList.remove('scale-90');
+            content.classList.add('scale-100');
+        }
+
+        function closeLogoutDialog() {
+            const dialog = document.getElementById('logout-dialog');
+            const content = dialog.querySelector('.m3-dialog-content');
+
+            dialog.classList.remove('opacity-100');
+            dialog.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-90');
+
+            setTimeout(() => {
+                dialog.classList.add('invisible');
+            }, 250);
+        }
+
+        function confirmLogout() {
+            closeLogoutDialog();
+            setTimeout(() => {
+                showToast('Sessão encerrada. Redirecionando...');
+            }, 300);
+        }
+    </script>
+</body>
+
+</html>

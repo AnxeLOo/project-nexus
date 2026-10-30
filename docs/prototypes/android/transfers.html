@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus - Transferências (Material You)</title>
+
+    <!-- Fonts & Material Symbols -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        m3: {
+                            bg: '#141318',
+                            surface: '#1D1B20',
+                            surfaceVariant: '#2A2830',
+                            surfaceHigh: '#35333C',
+                            primary: '#D0BCFF',
+                            onPrimary: '#381E72',
+                            primaryContainer: '#4F378B',
+                            onPrimaryContainer: '#EADDFF',
+                            secondaryContainer: '#4A4458',
+                            onSecondaryContainer: '#E8DEF8',
+                            tertiaryContainer: '#633B48',
+                            onTertiaryContainer: '#FFD8E4',
+                            outline: '#938F99',
+                            outlineVariant: '#49454F',
+                            activeTile: '#362F4A',
+                            activeTileBorder: '#D0BCFF'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        '3xl': '1.75rem',
+                        '4xl': '2rem',
+                        '5xl': '2.5rem',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Scrollbar & Material Symbols Settings */
+        ::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            user-select: none;
+        }
+
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* Interactive Card Transitions */
+        .m3-tile {
+            transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        .m3-tile:active {
+            transform: scale(0.98);
+        }
+
+        /* Toast Animation */
+        #toast {
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+        }
+
+        /* Animated Linear Progress Bar */
+        .progress-bar-fill {
+            transition: width 0.4s ease-in-out;
+        }
+
+        /* Dashed Drop Zone Hover effect */
+        .drop-zone {
+            background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='28' ry='28' stroke='%234F378BFF' stroke-width='2' stroke-dasharray='8%2c 8' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+        }
+    </style>
+</head>
+
+<body
+    class="bg-slate-950 text-slate-100 min-h-screen flex items-center justify-center p-0 sm:p-4 font-sans antialiased">
+
+    <!-- Mobile Frame Simulator -->
+    <div
+        class="w-full max-w-[412px] h-[100vh] sm:h-[870px] bg-m3-bg sm:rounded-[48px] shadow-2xl flex flex-col justify-between overflow-hidden relative border border-slate-800/80">
+
+        <!-- Android Status Bar -->
+        <div
+            class="w-full pt-3 px-6 pb-2 flex justify-between items-center text-xs font-medium text-slate-300 z-30 select-none">
+            <span id="current-time">09:41</span>
+            <div class="flex items-center space-x-2">
+                <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"
+                    title="Nexus Link Ativo"></span>
+                <span class="material-symbols-outlined text-[16px]">wifi</span>
+                <span class="material-symbols-outlined text-[16px]">bluetooth</span>
+                <div class="flex items-center gap-0.5 border border-slate-400/50 rounded-sm px-1 py-0.5">
+                    <span class="text-[10px]">92%</span>
+                    <span class="material-symbols-outlined text-[12px]">battery_full</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hidden Native File Input for Simulation -->
+        <input type="file" id="file-input" class="hidden" multiple onchange="handleFileSelect(event)">
+
+        <!-- Scrollable Transfers Screen Content -->
+        <main class="flex-1 overflow-y-auto px-5 pt-2 pb-28 space-y-5">
+
+            <!-- Top Header -->
+            <header class="flex justify-between items-center pt-2">
+                <div>
+                    <span class="text-xs font-medium text-purple-300 tracking-wider uppercase block">Histórico &
+                        Fila</span>
+                    <h1 class="text-xl font-bold text-slate-100">Transferências</h1>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <button onclick="clearCompleted()"
+                        class="px-3 py-1.5 rounded-full bg-m3-surfaceVariant text-slate-300 hover:text-slate-100 text-xs font-medium transition active:scale-95"
+                        title="Limpar Histórico Concluído">
+                        Limpar Concluídos
+                    </button>
+                    <button onclick="triggerFileInput()"
+                        class="w-10 h-10 rounded-2xl bg-m3-primary text-m3-onPrimary flex items-center justify-center hover:opacity-90 active:scale-95 transition shadow-lg"
+                        title="Enviar Arquivo">
+                        <span class="material-symbols-outlined text-2xl">add</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Connection Sub-header Badge -->
+            <div
+                class="bg-m3-surfaceVariant/60 border border-slate-700/50 rounded-2xl p-3 flex items-center justify-between">
+                <div class="flex items-center space-x-2.5">
+                    <span class="material-symbols-outlined text-emerald-400 text-lg">sync_alt</span>
+                    <div>
+                        <p class="text-xs font-semibold text-slate-200">MacBook Pro de Alex</p>
+                        <p class="text-[10px] text-slate-400">Canal Wi-Fi Direct • 450 Mbps</p>
+                    </div>
+                </div>
+                <span
+                    class="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold border border-emerald-500/30">
+                    Conectado
+                </span>
+            </div>
+
+            <!-- Quick AirDrop-style Drop Zone Tile -->
+            <section>
+                <div onclick="triggerFileInput()"
+                    class="drop-zone bg-m3-surface/50 rounded-3xl p-4 flex flex-col items-center justify-center text-center space-y-2 cursor-pointer hover:bg-m3-surface transition">
+                    <div
+                        class="w-12 h-12 rounded-2xl bg-m3-primaryContainer text-m3-onPrimaryContainer flex items-center justify-center shadow-md">
+                        <span class="material-symbols-outlined text-2xl">upload_file</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xs font-bold text-slate-200">Envio Instantâneo Nexus Share</h3>
+                        <p class="text-[11px] text-slate-400">Toque aqui para selecionar ou enviar para o Mac</p>
+                    </div>
+                    <button
+                        class="mt-1 px-4 py-1.5 rounded-full bg-m3-primary text-m3-onPrimary text-xs font-bold shadow-sm">
+                        Procurar Arquivos
+                    </button>
+                </div>
+            </section>
+
+            <!-- Active Transfers Section -->
+            <section class="space-y-3">
+                <div class="flex justify-between items-center px-1">
+                    <h2 class="text-xs font-bold tracking-wider text-slate-400 uppercase">Em Andamento</h2>
+                    <span id="active-count"
+                        class="text-xs font-bold text-purple-300 bg-m3-primaryContainer/60 px-2 py-0.5 rounded-full">2
+                        ativos</span>
+                </div>
+
+                <div id="active-transfers-list" class="space-y-3">
+
+                    <!-- Active Item 1 (In Progress) -->
+                    <div id="transfer-item-1"
+                        class="bg-m3-surface border border-m3-primaryContainer/70 rounded-3xl p-4 space-y-3 relative overflow-hidden">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3 min-w-0">
+                                <div
+                                    class="w-10 h-10 rounded-2xl bg-purple-500/20 text-purple-300 flex items-center justify-center shrink-0">
+                                    <span class="material-symbols-outlined">folder_zip</span>
+                                </div>
+                                <div class="min-w-0">
+                                    <h3 class="text-xs font-bold text-slate-100 truncate">Projeto_Nexus_v2.zip</h3>
+                                    <p class="text-[10px] text-slate-400 flex items-center space-x-1 mt-0.5">
+                                        <span
+                                            class="material-symbols-outlined text-xs text-purple-300">arrow_upward</span>
+                                        <span>Para Mac • <span id="progress-text-1">65%</span> (45 MB/s)</span>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Action Controls -->
+                            <div class="flex items-center space-x-1 shrink-0">
+                                <button onclick="togglePause('transfer-item-1', 'btn-pause-1', 'progress-1')"
+                                    id="btn-pause-1"
+                                    class="w-8 h-8 rounded-full bg-m3-surfaceVariant text-slate-200 flex items-center justify-center hover:bg-m3-surfaceHigh transition"
+                                    title="Pausar">
+                                    <span class="material-symbols-outlined text-base">pause</span>
+                                </button>
+                                <button onclick="cancelTransfer('transfer-item-1')"
+                                    class="w-8 h-8 rounded-full bg-m3-surfaceVariant text-slate-400 flex items-center justify-center hover:text-red-400 transition"
+                                    title="Cancelar">
+                                    <span class="material-symbols-outlined text-base">close</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Material 3 Linear Progress Bar -->
+                        <div class="space-y-1">
+                            <div class="w-full h-2 bg-m3-surfaceVariant rounded-full overflow-hidden">
+                                <div id="progress-1" class="progress-bar-fill h-full bg-m3-primary rounded-full"
+                                    style="width: 65%;"></div>
+                            </div>
+                            <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+                                <span>1.2 GB de 1.8 GB</span>
+                                <span id="eta-1">8 seg restantes</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Active Item 2 (Paused) -->
+                    <div id="transfer-item-2"
+                        class="bg-m3-surface border border-slate-800 rounded-3xl p-4 space-y-3 relative overflow-hidden opacity-90">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-3 min-w-0">
+                                <div
+                                    class="w-10 h-10 rounded-2xl bg-red-500/20 text-red-300 flex items-center justify-center shrink-0">
+                                    <span class="material-symbols-outlined">picture_as_pdf</span>
+                                </div>
+                                <div class="min-w-0">
+                                    <h3 class="text-xs font-bold text-slate-100 truncate">Apresentacao_Keynote.pdf</h3>
+                                    <p class="text-[10px] text-amber-400 flex items-center space-x-1 mt-0.5">
+                                        <span class="material-symbols-outlined text-xs">arrow_downward</span>
+                                        <span>Do Mac • Pausado em 40%</span>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Action Controls -->
+                            <div class="flex items-center space-x-1 shrink-0">
+                                <button onclick="togglePause('transfer-item-2', 'btn-pause-2', 'progress-2')"
+                                    id="btn-pause-2"
+                                    class="w-8 h-8 rounded-full bg-m3-primary text-m3-onPrimary flex items-center justify-center hover:opacity-90 transition"
+                                    title="Retomar">
+                                    <span class="material-symbols-outlined text-base">play_arrow</span>
+                                </button>
+                                <button onclick="cancelTransfer('transfer-item-2')"
+                                    class="w-8 h-8 rounded-full bg-m3-surfaceVariant text-slate-400 flex items-center justify-center hover:text-red-400 transition"
+                                    title="Cancelar">
+                                    <span class="material-symbols-outlined text-base">close</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Material 3 Linear Progress Bar -->
+                        <div class="space-y-1">
+                            <div class="w-full h-2 bg-m3-surfaceVariant rounded-full overflow-hidden">
+                                <div id="progress-2" class="progress-bar-fill h-full bg-amber-400 rounded-full"
+                                    style="width: 40%;"></div>
+                            </div>
+                            <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+                                <span>18 MB de 45 MB</span>
+                                <span id="eta-2">Pausado</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Section: Recent History -->
+            <section class="space-y-3 pt-2">
+                <h2 class="text-xs font-bold tracking-wider text-slate-400 uppercase px-1">Histórico Recente</h2>
+
+                <!-- Group: Hoje -->
+                <div class="space-y-2">
+                    <p class="text-[11px] font-semibold text-slate-400 px-1">Hoje</p>
+
+                    <!-- History Item 1 -->
+                    <div
+                        class="history-item bg-m3-surface border border-slate-800/80 rounded-2xl p-3 flex items-center justify-between">
+                        <div class="flex items-center space-x-3 min-w-0">
+                            <div
+                                class="w-9 h-9 rounded-xl bg-blue-500/20 text-blue-300 flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-xl">video_file</span>
+                            </div>
+                            <div class="min-w-0">
+                                <h4 class="text-xs font-semibold text-slate-200 truncate">Gravação_Continuity_4K.mp4
+                                </h4>
+                                <p class="text-[10px] text-slate-500 flex items-center space-x-1 mt-0.5">
+                                    <span
+                                        class="material-symbols-outlined text-[12px] text-emerald-400">arrow_upward</span>
+                                    <span>Para Mac • 420 MB • 10:14</span>
+                                </p>
+                            </div>
+                        </div>
+                        <span
+                            class="px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 text-[10px] font-bold shrink-0">
+                            Concluído
+                        </span>
+                    </div>
+
+                    <!-- History Item 2 -->
+                    <div
+                        class="history-item bg-m3-surface border border-slate-800/80 rounded-2xl p-3 flex items-center justify-between">
+                        <div class="flex items-center space-x-3 min-w-0">
+                            <div
+                                class="w-9 h-9 rounded-xl bg-purple-500/20 text-purple-300 flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-xl">image</span>
+                            </div>
+                            <div class="min-w-0">
+                                <h4 class="text-xs font-semibold text-slate-200 truncate">Screenshot_UI_Design.png</h4>
+                                <p class="text-[10px] text-slate-500 flex items-center space-x-1 mt-0.5">
+                                    <span
+                                        class="material-symbols-outlined text-[12px] text-purple-300">arrow_downward</span>
+                                    <span>Do Mac • 4.2 MB • 09:30</span>
+                                </p>
+                            </div>
+                        </div>
+                        <span
+                            class="px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 text-[10px] font-bold shrink-0">
+                            Concluído
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Group: Ontem -->
+                <div class="space-y-2 pt-1">
+                    <p class="text-[11px] font-semibold text-slate-400 px-1">Ontem</p>
+
+                    <!-- History Item 3 -->
+                    <div
+                        class="history-item bg-m3-surface border border-slate-800/80 rounded-2xl p-3 flex items-center justify-between">
+                        <div class="flex items-center space-x-3 min-w-0">
+                            <div
+                                class="w-9 h-9 rounded-xl bg-pink-500/20 text-pink-300 flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-xl">draw</span>
+                            </div>
+                            <div class="min-w-0">
+                                <h4 class="text-xs font-semibold text-slate-200 truncate">Design_System_M3.fig</h4>
+                                <p class="text-[10px] text-slate-500 flex items-center space-x-1 mt-0.5">
+                                    <span
+                                        class="material-symbols-outlined text-[12px] text-emerald-400">arrow_upward</span>
+                                    <span>Para Mac • 85 MB • 18:45</span>
+                                </p>
+                            </div>
+                        </div>
+                        <span
+                            class="px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 text-[10px] font-bold shrink-0">
+                            Concluído
+                        </span>
+                    </div>
+
+                    <!-- History Item 4 (Failed) -->
+                    <div
+                        class="history-item bg-m3-surface border border-slate-800/80 rounded-2xl p-3 flex items-center justify-between">
+                        <div class="flex items-center space-x-3 min-w-0">
+                            <div
+                                class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center shrink-0">
+                                <span class="material-symbols-outlined text-xl">archive</span>
+                            </div>
+                            <div class="min-w-0">
+                                <h4 class="text-xs font-semibold text-slate-200 truncate">Backup_Fotos_Raw.tar.gz</h4>
+                                <p class="text-[10px] text-slate-500 flex items-center space-x-1 mt-0.5">
+                                    <span class="material-symbols-outlined text-[12px] text-red-400">arrow_upward</span>
+                                    <span>Para Mac • 3.4 GB • 15:20</span>
+                                </p>
+                            </div>
+                        </div>
+                        <button onclick="retryTransfer('Backup_Fotos_Raw.tar.gz')"
+                            class="px-2.5 py-0.5 rounded-full bg-red-500/20 text-red-300 hover:bg-red-500/30 text-[10px] font-bold shrink-0 transition">
+                            Falhou (Tentar Novamente)
+                        </button>
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+
+        <!-- Floating Toast Notification -->
+        <div id="toast"
+            class="absolute bottom-20 left-1/2 -translate-x-1/2 bg-slate-100 text-slate-900 px-4 py-2.5 rounded-full text-xs font-semibold shadow-2xl flex items-center space-x-2 z-50 pointer-events-none opacity-0 translate-y-4">
+            <span class="material-symbols-outlined text-sm text-purple-700">check_circle</span>
+            <span id="toast-message">Mensagem de teste</span>
+        </div>
+
+        <!-- Floating Bottom Navigation Bar (Material You) -->
+        <nav
+            class="absolute bottom-3 left-4 right-4 bg-m3-surface/95 backdrop-blur-md border border-slate-800/80 rounded-full py-2 px-3 flex justify-around items-center shadow-2xl z-40">
+
+            <!-- Nav Item 1: Início -->
+            <button onclick="showToast('Navegando para a página inicial...')"
+                class="nav-item flex flex-col items-center space-y-0.5 text-slate-400 hover:text-slate-200">
+                <div class="px-5 py-1 rounded-full flex items-center justify-center transition-all">
+                    <span class="material-symbols-outlined text-xl">dashboard</span>
+                </div>
+                <span class="text-[10px] font-medium">Início</span>
+            </button>
+
+            <!-- Nav Item 2: Dispositivos -->
+            <button onclick="showToast('Abrindo dispositivos conectados...')"
+                class="nav-item flex flex-col items-center space-y-0.5 text-slate-400 hover:text-slate-200">
+                <div class="px-5 py-1 rounded-full flex items-center justify-center transition-all">
+                    <span class="material-symbols-outlined text-xl">devices</span>
+                </div>
+                <span class="text-[10px] font-medium">Dispositivos</span>
+            </button>
+
+            <!-- Nav Item 3: Transferências (ACTIVE) -->
+            <button class="nav-item flex flex-col items-center space-y-0.5 text-m3-primary">
+                <div
+                    class="px-5 py-1 rounded-full bg-m3-secondaryContainer text-m3-onSecondaryContainer flex items-center justify-center transition-all">
+                    <span class="material-symbols-outlined text-xl filled">swap_horiz</span>
+                </div>
+                <span class="text-[10px] font-medium">Transferências</span>
+            </button>
+
+            <!-- Nav Item 4: Ajustes -->
+            <button onclick="showToast('Abrindo configurações...')"
+                class="nav-item flex flex-col items-center space-y-0.5 text-slate-400 hover:text-slate-200">
+                <div class="px-5 py-1 rounded-full flex items-center justify-center transition-all">
+                    <span class="material-symbols-outlined text-xl">tune</span>
+                </div>
+                <span class="text-[10px] font-medium">Ajustes</span>
+            </button>
+
+        </nav>
+
+        <!-- Android Gesture Navigation Bar -->
+        <div class="w-full pb-2 flex justify-center items-center z-40 pointer-events-none">
+            <div class="w-32 h-1 bg-slate-500/50 rounded-full"></div>
+        </div>
+
+    </div>
+
+    <!-- Interactive JavaScript Logic -->
+    <script>
+        // Real-time Clock
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            document.getElementById('current-time').textContent = `${hours}:${minutes}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Toast Controller
+        let toastTimeout;
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+
+            toastMsg.textContent = message;
+            toast.classList.remove('opacity-0', 'translate-y-4');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', 'translate-y-4');
+            }, 2500);
+        }
+
+        // Toggle Pause/Resume Transfer
+        function togglePause(itemId, btnId, progressId) {
+            const btn = document.getElementById(btnId);
+            const icon = btn.querySelector('.material-symbols-outlined');
+            const progress = document.getElementById(progressId);
+
+            if (icon.textContent === 'pause') {
+                icon.textContent = 'play_arrow';
+                btn.classList.replace('bg-m3-surfaceVariant', 'bg-m3-primary');
+                btn.classList.replace('text-slate-200', 'text-m3-onPrimary');
+                progress.classList.replace('bg-m3-primary', 'bg-amber-400');
+                showToast('Transferência pausada');
+            } else {
+                icon.textContent = 'pause';
+                btn.classList.replace('bg-m3-primary', 'bg-m3-surfaceVariant');
+                btn.classList.replace('text-m3-onPrimary', 'text-slate-200');
+                progress.classList.replace('bg-amber-400', 'bg-m3-primary');
+                showToast('Retomando transferência...');
+            }
+        }
+
+        // Cancel Active Transfer
+        function cancelTransfer(itemId) {
+            const item = document.getElementById(itemId);
+            if (item) {
+                item.style.transition = 'all 0.3s ease';
+                item.style.opacity = '0';
+                item.style.transform = 'scale(0.9)';
+                setTimeout(() => {
+                    item.remove();
+                    updateActiveCount();
+                    showToast('Transferência cancelada');
+                }, 300);
+            }
+        }
+
+        // Trigger Hidden File Picker
+        function triggerFileInput() {
+            document.getElementById('file-input').click();
+        }
+
+        // Handle Simulated File Picker Upload
+        function handleFileSelect(event) {
+            const files = event.target.files;
+            if (files.length > 0) {
+                const fileName = files[0].name;
+                addNewTransfer(fileName);
+                showToast(`Enviando "${fileName}" para o Mac...`);
+            }
+        }
+
+        // Add New Transfer Item Dynamically
+        function addNewTransfer(fileName) {
+            const list = document.getElementById('active-transfers-list');
+            const id = 'transfer-' + Date.now();
+
+            const newItemHTML = `
+        <div id="${id}" class="bg-m3-surface border border-m3-primaryContainer/70 rounded-3xl p-4 space-y-3 relative overflow-hidden">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3 min-w-0">
+              <div class="w-10 h-10 rounded-2xl bg-m3-primaryContainer text-m3-onPrimaryContainer flex items-center justify-center shrink-0">
+                <span class="material-symbols-outlined">description</span>
+              </div>
+              <div class="min-w-0">
+                <h3 class="text-xs font-bold text-slate-100 truncate">${fileName}</h3>
+                <p class="text-[10px] text-slate-400 flex items-center space-x-1 mt-0.5">
+                  <span class="material-symbols-outlined text-xs text-purple-300">arrow_upward</span>
+                  <span>Para Mac • Enviando...</span>
+                </p>
+              </div>
+            </div>
+            <div class="flex items-center space-x-1 shrink-0">
+              <button onclick="cancelTransfer('${id}')" class="w-8 h-8 rounded-full bg-m3-surfaceVariant text-slate-400 flex items-center justify-center hover:text-red-400 transition" title="Cancelar">
+                <span class="material-symbols-outlined text-base">close</span>
+              </button>
+            </div>
+          </div>
+          <div class="space-y-1">
+            <div class="w-full h-2 bg-m3-surfaceVariant rounded-full overflow-hidden">
+              <div class="progress-bar-fill h-full bg-m3-primary rounded-full animate-pulse" style="width: 25%;"></div>
+            </div>
+            <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+              <span>Nexus Direct Link</span>
+              <span>Conectando...</span>
+            </div>
+          </div>
+        </div>
+      `;
+
+            list.insertAdjacentHTML('afterbegin', newItemHTML);
+            updateActiveCount();
+        }
+
+        // Update Active Counter Badge
+        function updateActiveCount() {
+            const activeItems = document.getElementById('active-transfers-list').children.length;
+            document.getElementById('active-count').textContent = `${activeItems} ativo${activeItems !== 1 ? 's' : ''}`;
+        }
+
+        // Clear Completed History Items
+        function clearCompleted() {
+            const historyItems = document.querySelectorAll('.history-item');
+            historyItems.forEach(item => {
+                item.style.transition = 'all 0.2s ease';
+                item.style.opacity = '0';
+            });
+            setTimeout(() => {
+                showToast('Histórico de concluídos limpo');
+            }, 250);
+        }
+
+        // Retry Failed Item
+        function retryTransfer(fileName) {
+            addNewTransfer(fileName);
+            showToast(`Reiniciando envio de ${fileName}...`);
+        }
+
+        // Simulated Active Progress Animation
+        setInterval(() => {
+            const p1 = document.getElementById('progress-1');
+            const p1Text = document.getElementById('progress-text-1');
+            if (p1 && p1Text) {
+                let current = parseInt(p1.style.width) || 65;
+                if (current < 98) {
+                    current += 2;
+                    p1.style.width = current + '%';
+                    p1Text.textContent = current + '%';
+                }
+            }
+        }, 1500);
+    </script>
+</body>
+
+</html>
